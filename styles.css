@@ -1,379 +1,349 @@
-/* ===== STYLES PENTRU APLICAȚIA DE INDEXURI ===== */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.header h1 {
-    color: #333;
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    font-weight: 700;
-}
-
-.header p {
-    color: #666;
-    font-size: 1.1em;
-}
-
-/* ===== SECȚIUNI ===== */
-.section {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.section:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-.section h2 {
-    color: #444;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.3em;
-    font-weight: 600;
-    border-bottom: 2px solid #f1f1f1;
-    padding-bottom: 10px;
-}
-
-/* ===== INPUTS ȘI FORME ===== */
-.input-group {
-    margin-bottom: 20px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #555;
-    font-size: 0.95em;
-}
-
-.input-group input,
-.input-group select,
-.input-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e1e1e1;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* ===== BUTOANE ===== */
-.btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-    color: #2d3436;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #ff7675 0%, #e84393 100%);
-}
-
-/* ===== CARDS ȘI STATISTICI ===== */
-.stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 25px;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-    color: white;
-    padding: 25px;
-    border-radius: 15px;
-    text-align: center;
-    transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-}
-
-.stat-card h3 {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    opacity: 0.9;
-}
-
-.stat-card p {
-    font-size: 2.2em;
-    font-weight: bold;
-    margin: 0;
-}
-
-/* ===== INDEX CARDS ===== */
-.index-card {
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-}
-
-.index-card:hover {
-    border-color: #667eea;
-    background: #ffffff;
-}
-
-.index-title {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.index-value {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #667eea;
-    margin-bottom: 5px;
-}
-
-.index-date {
-    font-size: 0.9em;
-    color: #6c757d;
-}
-
-/* ===== REMINDER-URI ===== */
-.reminder-item {
-    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-    color: white;
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.reminder-text {
-    font-weight: 600;
-}
-
-.reminder-date {
-    opacity: 0.9;
-    font-size: 0.9em;
-}
-
-/* ===== CAMERA SECTION ===== */
-.camera-section {
-    text-align: center;
-    padding: 20px;
-    border: 2px dashed #ddd;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-#video {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 10px;
-    margin: 10px 0;
-}
-
-#canvas {
-    display: none;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indexuri & Reminder-uri</title>
+    <link rel="stylesheet" href="styles.css">
     
-    .container {
-        padding: 20px;
-        border-radius: 15px;
-    }
+    <!-- 🚀 PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
     
-    .header h1 {
-        font-size: 2em;
-    }
+    <!-- iOS specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Indexuri">
+    <link rel="apple-touch-icon" href="icon-192.png">
     
-    .section {
-        padding: 20px;
-        margin-bottom: 15px;
-    }
-    
-    .stats {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    .stat-card {
-        padding: 20px;
-    }
-    
-    .btn {
-        padding: 10px 20px;
-        font-size: 15px;
-    }
-}
+    <!-- Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Indexuri & Reminder-uri</h1>
+            <p>Gestionați indexurile utilitățiilor și reminder-urile auto</p>
+            <!-- Indicator sincronizare -->
+            <div id="syncIndicator" class="sync-indicator disconnected">
+                ⚠️ Nu e configurat partenerul
+            </div>
+        </div>
 
-@media (max-width: 480px) {
-    .container {
-        padding: 15px;
-    }
-    
-    .section {
-        padding: 15px;
-    }
-    
-    .header h1 {
-        font-size: 1.8em;
-    }
-    
-    .input-group input,
-    .input-group select,
-    .input-group textarea {
-        padding: 10px 12px;
-    }
-}
+        <!-- Alertele active -->
+        <div class="alerts" id="alerts"></div>
 
-/* ===== BUTON RESET DATA ===== */
-.reset-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
+        <!-- Loading pentru scanare -->
+        <div class="loading-overlay" id="loadingOverlay"></div>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <h3>📷 Scanez imaginea...</h3>
+            <p>Extrag numărul de pe contor</p>
+        </div>
 
-.reset-btn {
-    background: #ff4757;
-    color: white;
-    border: none;
-    padding: 12px 16px;
-    border-radius: 25px;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: inherit;
-    font-weight: 600;
-}
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('utilities')">🏠 Utilități</button>
+            <button class="tab" onclick="showSection('car')">🚗 Mașina</button>
+            <button class="tab" onclick="showSection('stats')">📈 Statistici</button>
+        </div>
 
-.reset-btn:hover {
-    background: #ff3742;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
-}
+        <!-- Secțiunea Utilități -->
+        <div class="section active" id="utilities">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn quick-btn btn-success" onclick="markAllIndexesSent()">
+                    ✅ Trimise toate
+                </button>
+                <button class="btn quick-btn btn-warning" onclick="showBulkIndexForm()">
+                    📝 Index rapid
+                </button>
+                <button class="btn quick-btn quick-sync-btn sync-action" onclick="quickSync()">
+                    🔄 Sincronizează
+                </button>
+                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
+                    📤 Partajează
+                </button>
+                <label class="btn quick-btn btn-camera" for="cameraInput">
+                    📷 Scanează
+                </label>
+                <input type="file" id="cameraInput" class="hidden" accept="image/*" capture="environment" onchange="scanIndexFromImage(this.files[0])">
+            </div>
 
-.reset-btn:active {
-    transform: translateY(0);
-}
+            <!-- Indexuri Apă -->
+            <div class="card">
+                <h3>💧 Indexuri Apă <span class="status-badge" id="waterStatus">📅 Până pe 15</span></h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Apometru Baie</div>
+                        <div class="index-last" id="waterBathLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="waterBathCurrent">---</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showIndexForm('waterBath', 'Apometru Baie')">Citește</button>
+                        <label class="btn btn-camera" for="waterBathCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('waterBath', 'Apometru Baie')">🗑️</button>
+                        <input type="file" id="waterBathCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterBath', 'Apometru Baie')">
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Apometru Bucătărie</div>
+                        <div class="index-last" id="waterKitchenLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="waterKitchenCurrent">---</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showIndexForm('waterKitchen', 'Apometru Bucătărie')">Citește</button>
+                        <label class="btn btn-camera" for="waterKitchenCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('waterKitchen', 'Apometru Bucătărie')">🗑️</button>
+                        <input type="file" id="waterKitchenCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterKitchen', 'Apometru Bucătărie')">
+                    </div>
+                </div>
+            </div>
 
-/* Responsiv pentru mobile - buton reset */
-@media (max-width: 768px) {
-    .reset-container {
-        bottom: 15px;
-        right: 15px;
-    }
-    
-    .reset-btn {
-        padding: 10px 14px;
-        font-size: 13px;
-    }
-}
+            <!-- Indexuri Gaz & Electricitate -->
+            <div class="card">
+                <h3>🔥 Gaz & Electricitate <span class="status-badge" id="gasElectricStatus">📅 Până pe 20</span></h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Contor Gaz</div>
+                        <div class="index-last" id="gasLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="gasCurrent">---</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showIndexForm('gas', 'Contor Gaz')">Citește</button>
+                        <label class="btn btn-camera" for="gasCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('gas', 'Contor Gaz')">🗑️</button>
+                        <input type="file" id="gasCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'gas', 'Contor Gaz')">
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Contor Electricitate</div>
+                        <div class="index-last" id="electricLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="electricCurrent">---</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showIndexForm('electric', 'Contor Electricitate')">Citește</button>
+                        <label class="btn btn-camera" for="electricCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('electric', 'Contor Electricitate')">🗑️</button>
+                        <input type="file" id="electricCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'electric', 'Contor Electricitate')">
+                    </div>
+                </div>
+            </div>
 
-/* ===== ANIMAȚII ===== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+            <!-- Plată Asociație -->
+            <div class="card">
+                <h3>🏢 Asociația de Proprietari</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Plată lunară</div>
+                        <div class="index-last" id="associationLast">Ultima plată: -</div>
+                    </div>
+                    <div class="index-current" id="associationCurrent">--- RON</div>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="showPaymentForm('association', 'Plată Asociație')">Plătește</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('association', 'Plată Asociație')">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-.section {
-    animation: fadeIn 0.6s ease-out;
-}
+        <!-- Secțiunea Mașina -->
+        <div class="section" id="car">
+            <div class="card">
+                <h3>🚗 Întreținere Mașină</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Schimb Ulei</div>
+                        <div class="index-last" id="oilLast">Ultima dată: -</div>
+                    </div>
+                    <div class="index-current" id="oilCurrent">--- km</div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" onclick="showCarForm('oil', 'Schimb Ulei')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('oil', 'Schimb Ulei')">🗑️</button>
+                    </div>
+                </div>
+            </div>
 
-/* ===== UTILITĂȚI ===== */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
+            <div class="card">
+                <h3>📋 Documente Auto</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Rovinietă</div>
+                        <div class="index-last" id="vignetteStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="vignetteExpiry">--/--/----</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('vignette', 'Rovinietă')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('vignette', 'Rovinietă')">🗑️</button>
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Asigurare</div>
+                        <div class="index-last" id="insuranceStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="insuranceExpiry">--/--/----</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('insurance', 'Asigurare')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('insurance', 'Asigurare')">🗑️</button>
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">ITP</div>
+                        <div class="index-last" id="itpStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="itpExpiry">--/--/----</div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('itp', 'ITP')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('itp', 'ITP')">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-.mb-10 { margin-bottom: 10px; }
-.mb-15 { margin-bottom: 15px; }
-.mb-20 { margin-bottom: 20px; }
+        <!-- Secțiunea Statistici -->
+        <div class="section" id="stats">
+            <div class="quick-actions">
+                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
+                    📤 Partajează datele
+                </button>
+                <button class="btn quick-btn" style="background: #FF5722;" onclick="showImportFromLink()">
+                    📥 Importă date
+                </button>
+                <button class="btn quick-btn btn-danger" onclick="clearAllData()">
+                    🗑️ Șterge Tot
+                </button>
+            </div>
 
-.mt-10 { margin-top: 10px; }
-.mt-15 { margin-top: 15px; }
-.mt-20 { margin-top: 20px; }
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📊 Indexuri trimise luna aceasta</h4>
+                    <div class="value" id="statIndexesSent">0/4</div>
+                </div>
+                <div class="stat-card">
+                    <h4>⚠️ Reminder-uri active</h4>
+                    <div class="value" id="statActiveReminders">0</div>
+                </div>
+            </div>
 
-.flex { display: flex; }
-.flex-column { flex-direction: column; }
-.align-center { align-items: center; }
-.justify-center { justify-content: center; }
-.gap-10 { gap: 10px; }
-.gap-15 { gap: 15px; }
+            <div class="card">
+                <h3>📈 Consumuri Lunare</h3>
+                <div id="consumptionList">
+                    <div class="consumption-item">
+                        <span class="consumption-period">Această lună</span>
+                        <span class="consumption-value">Calculez...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔔 Reminder-uri Active</h3>
+                <div id="remindersList">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Nu există reminder-uri active
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Setări Sincronizare</h3>
+                <div class="sync-settings">
+                    <h4>🔄 Configurare Partener</h4>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">
+                        Configurează sincronizarea automată cu partenerul tău
+                    </p>
+                    <div class="btn-group">
+                        <button class="btn setup-partner-btn" onclick="setupPartner()">
+                            👤 Configurează Partener
+                        </button>
+                        <button class="btn" onclick="showSyncSettings()" style="background: #6c757d;">
+                            ⚙️ Setări Avansate
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Istoric Înregistrări</h3>
+                <div id="historyList">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Nu există înregistrări
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Popup -->
+    <div class="form-overlay" id="formOverlay">
+        <div class="form-popup">
+            <h3 id="formTitle">Adaugă Index</h3>
+            <div class="form-group">
+                <label id="formLabel">Index curent:</label>
+                <input type="number" id="formValue" placeholder="Introduceți valoarea">
+            </div>
+            <div class="form-group" id="previousIndexGroup" style="display: none;">
+                <label>Index anterior (luna trecută):</label>
+                <input type="number" id="formPrevious" placeholder="Ex: 123000">
+            </div>
+            <div class="form-group" id="kmGroup" style="display: none;">
+                <label>Kilometri parcurși:</label>
+                <input type="number" id="formKm" placeholder="Ex: 125000">
+            </div>
+            <div class="form-group" id="dateGroup" style="display: none;">
+                <label>Data:</label>
+                <input type="date" id="formDate">
+            </div>
+            <div class="form-buttons">
+                <button class="btn btn-success btn-full" onclick="saveForm()">💾 Salvează</button>
+                <button class="btn btn-full" style="background: #666;" onclick="hideForm()">❌ Anulează</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay pentru opțiuni de ștergere -->
+    <div class="form-overlay" id="deleteOverlay">
+        <div class="form-popup">
+            <h3 id="deleteTitle">Opțiuni Ștergere</h3>
+            <div id="deleteContent"></div>
+            <div class="form-buttons">
+                <button class="btn btn-full" style="background: #666;" onclick="hideDeleteOptions()">❌ Anulează</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUTON RESET DATA - COMPATIBIL CU SINCRONIZAREA BILATERALĂ -->
+    <div class="reset-container">
+        <button class="reset-btn" onclick="resetAllData()" title="Reset Date - Sincronizare cu Costica activă">
+            🗑️ <span class="reset-text">Reset Date</span>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
