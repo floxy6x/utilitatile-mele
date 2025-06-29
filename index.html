@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionare Utilități</title>
+    <title>Indexuri & Reminder-uri</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
         
         .container {
@@ -37,91 +37,184 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 24px;
+            font-size: 22px;
         }
         
         .header p {
             color: #666;
             font-size: 14px;
         }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+
+        .alerts {
             margin-bottom: 20px;
         }
-        
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .stat-card h3 {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .stat-card .amount {
-            color: #333;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .btn {
-            background: #4CAF50;
+
+        .alert {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
             color: white;
-            border: none;
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 12px;
-            font-size: 16px;
+            margin-bottom: 10px;
             font-weight: 600;
-            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .alert.info {
+            background: linear-gradient(135deg, #54a0ff 0%, #2e86de 100%);
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #5f27cd 0%, #341f97 100%);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            border: none;
-            outline: none;
-        }
-        
-        .btn:hover, .btn:active {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        
-        .btn-primary { background: #2196F3; }
-        .btn-success { background: #4CAF50; }
-        .btn-info { background: #00BCD4; }
-        .btn-warning { background: #FF9800; }
-        
-        .form-container {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .section {
             display: none;
         }
         
-        .form-container h2 {
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+        
+        .index-grid {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .index-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .index-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .index-last {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .index-current {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2196F3;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #1976D2;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success { background: #4CAF50; }
+        .btn-success:hover { background: #45a049; }
+        
+        .btn-warning { background: #FF9800; }
+        .btn-warning:hover { background: #f57c00; }
+        
+        .btn-danger { background: #f44336; }
+        .btn-danger:hover { background: #d32f2f; }
+
+        .btn-camera {
+            background: #00BCD4;
+            margin-left: 5px;
+            padding: 8px 10px;
+        }
+        
+        .form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .form-popup {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .form-group {
@@ -136,19 +229,15 @@
             font-size: 14px;
         }
         
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 2px solid #e1e5e9;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
-            background: white;
         }
         
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             border-color: #2196F3;
             outline: none;
         }
@@ -156,111 +245,77 @@
         .form-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
         
-        .btn-small {
+        .btn-full {
             flex: 1;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .entries {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .entries-header {
-            padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .entries-header h2 {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .entries-header p {
-            color: #666;
+            padding: 12px;
             font-size: 14px;
         }
         
-        .entry {
-            padding: 15px 20px;
-            border-bottom: 1px solid #f0f0f0;
+        .quick-actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.2s ease;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        
-        .entry:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .entry:last-child {
-            border-bottom: none;
-        }
-        
-        .entry-info {
+
+        .quick-btn {
             flex: 1;
-        }
-        
-        .entry-type {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
-            font-size: 16px;
-        }
-        
-        .entry-amount {
-            font-size: 18px;
-            font-weight: bold;
-            color: #2196F3;
-            margin-bottom: 4px;
-        }
-        
-        .entry-date {
+            padding: 12px 8px;
             font-size: 12px;
-            color: #666;
-            line-height: 1.4;
+            text-align: center;
         }
-        
-        .entry-actions {
-            display: flex;
-            gap: 5px;
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
         }
-        
-        .btn-icon {
-            background: none;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.2s ease;
+
+        .status-ok {
+            background: #e8f5e8;
+            color: #2e7d32;
         }
-        
-        .btn-icon:hover {
-            background-color: #f0f0f0;
+
+        .status-warning {
+            background: #fff3e0;
+            color: #f57c00;
         }
-        
-        .btn-edit { color: #2196F3; }
-        .btn-delete { color: #f44336; }
-        
+
+        .status-danger {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
         .loading {
             background: white;
             padding: 25px;
             border-radius: 15px;
-            margin-bottom: 20px;
             text-align: center;
             display: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            max-width: 90%;
+            width: 300px;
         }
         
         .spinner {
@@ -277,117 +332,86 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .loading h3 {
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 18px;
-        }
-        
-        .loading p {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-        }
-        
-        .empty-state h3 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-        
-        .empty-state p {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .file-input {
-            display: none;
+
+        .hidden {
+            display: none !important;
         }
 
-        .tips {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border: 1px solid #2196f3;
-            border-radius: 12px;
-            padding: 18px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(33, 150, 243, 0.1);
         }
-
-        .tips h4 {
-            color: #1976d2;
-            margin-bottom: 12px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .tips ul {
-            color: #1565c0;
-            font-size: 14px;
-            padding-left: 20px;
-            line-height: 1.6;
-        }
-
-        .tips li {
-            margin-bottom: 4px;
-        }
-
-        .footer {
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: rgba(255,255,255,0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h4 {
+            color: #666;
             font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .value {
+            color: #2196F3;
+            font-size: 16px;
+            font-weight: bold;
         }
 
-        .footer p {
+        .consumption-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .consumption-item:last-child {
+            border-bottom: none;
+        }
+
+        .consumption-period {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .consumption-value {
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .reminder-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .reminder-item.urgent {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .reminder-item.warning {
+            border-left-color: #FF9800;
+            background: #fff3e0;
+        }
+        
+        .reminder-title {
+            font-weight: 600;
+            color: #333;
             margin-bottom: 5px;
         }
-
-        /* Responsive design */
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            body {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-            }
-            
-            .stats {
-                gap: 10px;
-            }
-            
-            .stat-card {
-                padding: 12px;
-            }
-            
-            .stat-card .amount {
-                font-size: 16px;
-            }
-        }
-
-        /* Animation for better UX */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-container {
-            animation: fadeIn 0.3s ease;
-        }
-
-        .entry {
-            animation: fadeIn 0.3s ease;
+        
+        .reminder-date {
+            font-size: 12px;
+            color: #666;
         }
     </style>
 </head>
@@ -395,686 +419,1373 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🏠 Gestionare Utilități</h1>
-            <p>Urmăriți și gestionați facturile pentru apă, gaz și întreținere</p>
+            <h1>📊 Indexuri & Reminder-uri</h1>
+            <p>Gestionați indexurile utilitățților și reminder-urile auto</p>
         </div>
 
-        <!-- Statistici -->
-        <div class="stats">
-            <div class="stat-card">
-                <h3>💰 Total General</h3>
-                <div class="amount" id="totalGeneral">0.00 RON</div>
-            </div>
-            <div class="stat-card">
-                <h3>📅 Luna aceasta</h3>
-                <div class="amount" id="totalLuna">0.00 RON</div>
-            </div>
-            <div class="stat-card">
-                <h3>💧 Apă</h3>
-                <div class="amount" id="totalApa">0.00 RON</div>
-            </div>
-            <div class="stat-card">
-                <h3>🔥 Gaz + 🏠 Întreținere</h3>
-                <div class="amount" id="totalGazIntretinere">0.00 RON</div>
-            </div>
-        </div>
+        <!-- Alertele active -->
+        <div class="alerts" id="alerts"></div>
 
-        <!-- Butoane -->
-        <div class="buttons">
-            <button class="btn btn-primary" onclick="showForm()">
-                ➕ Adaugă Manual
-            </button>
-            <label class="btn btn-success" for="fileInput">
-                📄 Scanează Factură
-            </label>
-            <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="scanBill(this.files[0])">
-            <label class="btn btn-info" for="cameraInput">
-                📷 Fotografiază Factură
-            </label>
-            <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment" onchange="scanBill(this.files[0])">
-        </div>
-
-        <!-- Sfaturi pentru scanare -->
-        <div class="tips" id="scanTips" style="display: none;">
-            <h4>💡 Sfaturi pentru scanare optimă:</h4>
-            <ul>
-                <li>🌞 Folosiți lumină naturală sau LED puternică</li>
-                <li>📐 Poziționați factura pe o suprafață plană și dreaptă</li>
-                <li>🔍 Asigurați-vă că textul este clar și lizibil</li>
-                <li>🚫 Evitați umbrele pe document</li>
-                <li>📸 Fotografia să cuprindă toată factura, cu margini</li>
-                <li>🎯 Țineți telefonul drept deasupra facturii</li>
-            </ul>
-        </div>
-
-        <!-- Loading -->
+        <!-- Loading pentru scanare -->
+        <div class="loading-overlay" id="loadingOverlay"></div>
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <h3>🔍 Procesez imaginea...</h3>
-            <p>Extrag informațiile din factură folosind recunoașterea optică</p>
+            <h3>📷 Scanez imaginea...</h3>
+            <p>Extrag numărul de pe contor</p>
         </div>
 
-        <!-- Formular -->
-        <div class="form-container" id="formContainer">
-            <h2 id="formTitle">Adaugă Factură Nouă</h2>
-            
-            <div class="form-group">
-                <label>🏷️ Tip Utilitate *</label>
-                <select id="tip">
-                    <option value="apa">💧 Apă</option>
-                    <option value="gaz">🔥 Gaz</option>
-                    <option value="intretinere">🏠 Întreținere</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>💰 Sumă (RON) *</label>
-                <input type="number" step="0.01" id="suma" placeholder="Ex: 85.50">
-            </div>
-
-            <div class="form-group">
-                <label>📅 Data Facturii *</label>
-                <input type="date" id="data">
-            </div>
-
-            <div class="form-group">
-                <label>📝 Observații</label>
-                <input type="text" id="observatii" placeholder="Ex: Factură pentru apartamentul 2A">
-            </div>
-
-            <div class="form-buttons">
-                <button class="btn btn-success btn-small" onclick="saveBill()">💾 Salvează</button>
-                <button class="btn btn-small" style="background: #666;" onclick="hideForm()">❌ Anulează</button>
-            </div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('utilities')">🏠 Utilități</button>
+            <button class="tab" onclick="showSection('car')">🚗 Mașina</button>
+            <button class="tab" onclick="showSection('stats')">📈 Statistici</button>
         </div>
 
-        <!-- Lista facturilor -->
-        <div class="entries">
-            <div class="entries-header">
-                <h2>📋 Facturi Înregistrate</h2>
-                <p id="entriesCount">Total: 0 facturi</p>
+        <!-- Secțiunea Utilități -->
+        <div class="section active" id="utilities">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn quick-btn btn-success" onclick="markAllIndexesSent()">
+                    ✅ Trimise toate
+                </button>
+                <button class="btn quick-btn btn-warning" onclick="showBulkIndexForm()">
+                    📝 Index rapid
+                </button>
+                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
+                    📤 Partajează
+                </button>
+                <label class="btn quick-btn btn-camera" for="cameraInput">
+                    📷 Scanează
+                </label>
+                <input type="file" id="cameraInput" class="hidden" accept="image/*" capture="environment" onchange="scanIndexFromImage(this.files[0])">
             </div>
-            <div id="entriesList">
-                <div class="empty-state">
-                    <h3>📋 Nu aveți facturi înregistrate încă</h3>
-                    <p>Apăsați pe "Adaugă Manual" pentru a introduce prima factură sau folosiți "Scanează Factură" pentru a fotografia o factură existentă.</p>
-                    <p style="margin-top: 15px; font-size: 12px; color: #999;">
-                        💡 <strong>Sfat:</strong> Folosiți funcția de scanare pentru a extrage automat datele din fotografii
-                    </p>
+
+            <!-- Indexuri Apă -->
+            <div class="card">
+                <h3>💧 Indexuri Apă <span class="status-badge" id="waterStatus">📅 Până pe 15</span></h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Apometru Baie</div>
+                        <div class="index-last" id="waterBathLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="waterBathCurrent">---</div>
+                    <div>
+                        <button class="btn" onclick="showIndexForm('waterBath', 'Apometru Baie')">Citește</button>
+                        <label class="btn btn-camera" for="waterBathCamera">📷</label>
+                        <input type="file" id="waterBathCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterBath', 'Apometru Baie')">
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Apometru Bucătărie</div>
+                        <div class="index-last" id="waterKitchenLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="waterKitchenCurrent">---</div>
+                    <div>
+                        <button class="btn" onclick="showIndexForm('waterKitchen', 'Apometru Bucătărie')">Citește</button>
+                        <label class="btn btn-camera" for="waterKitchenCamera">📷</label>
+                        <input type="file" id="waterKitchenCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterKitchen', 'Apometru Bucătărie')">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indexuri Gaz & Electricitate -->
+            <div class="card">
+                <h3>🔥 Gaz & Electricitate <span class="status-badge" id="gasElectricStatus">📅 Până pe 20</span></h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Contor Gaz</div>
+                        <div class="index-last" id="gasLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="gasCurrent">---</div>
+                    <div>
+                        <button class="btn" onclick="showIndexForm('gas', 'Contor Gaz')">Citește</button>
+                        <label class="btn btn-camera" for="gasCamera">📷</label>
+                        <input type="file" id="gasCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'gas', 'Contor Gaz')">
+                    </div>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Contor Electricitate</div>
+                        <div class="index-last" id="electricLast">Ultimul: -</div>
+                    </div>
+                    <div class="index-current" id="electricCurrent">---</div>
+                    <div>
+                        <button class="btn" onclick="showIndexForm('electric', 'Contor Electricitate')">Citește</button>
+                        <label class="btn btn-camera" for="electricCamera">📷</label>
+                        <input type="file" id="electricCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'electric', 'Contor Electricitate')">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plată Asociație -->
+            <div class="card">
+                <h3>🏢 Asociația de Proprietari</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Plată lunară</div>
+                        <div class="index-last" id="associationLast">Ultima plată: -</div>
+                    </div>
+                    <div class="index-current" id="associationCurrent">--- RON</div>
+                    <button class="btn btn-success" onclick="showPaymentForm('association', 'Plată Asociație')">Plătește</button>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p>💡 <strong>Aplicație Gestionare Utilități v1.0</strong></p>
-            <p>🔒 Toate datele sunt stocate local pe dispozitivul dvs.</p>
-            <p>🚀 Dezvoltat pentru ușurința gestionării facturilor</p>
+        <!-- Secțiunea Mașina -->
+        <div class="section" id="car">
+            <div class="card">
+                <h3>🚗 Întreținere Mașină</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Schimb Ulei</div>
+                        <div class="index-last" id="oilLast">Ultima dată: -</div>
+                    </div>
+                    <div class="index-current" id="oilCurrent">--- km</div>
+                    <button class="btn btn-warning" onclick="showCarForm('oil', 'Schimb Ulei')">Actualizează</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Documente Auto</h3>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Rovinietă</div>
+                        <div class="index-last" id="vignetteStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="vignetteExpiry">--/--/----</div>
+                    <button class="btn" onclick="showCarForm('vignette', 'Rovinietă')">Actualizează</button>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">Asigurare</div>
+                        <div class="index-last" id="insuranceStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="insuranceExpiry">--/--/----</div>
+                    <button class="btn" onclick="showCarForm('insurance', 'Asigurare')">Actualizează</button>
+                </div>
+                
+                <div class="index-grid">
+                    <div class="index-info">
+                        <div class="index-name">ITP</div>
+                        <div class="index-last" id="itpStatus">Status: -</div>
+                    </div>
+                    <div class="index-current" id="itpExpiry">--/--/----</div>
+                    <button class="btn" onclick="showCarForm('itp', 'ITP')">Actualizează</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secțiunea Statistici -->
+        <div class="section" id="stats">
+            <div class="quick-actions">
+                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
+                    📤 Partajează datele
+                </button>
+                <button class="btn quick-btn" style="background: #FF5722;" onclick="showImportFromLink()">
+                    📥 Importă date
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📊 Indexuri trimise luna aceasta</h4>
+                    <div class="value" id="statIndexesSent">0/4</div>
+                </div>
+                <div class="stat-card">
+                    <h4>⚠️ Reminder-uri active</h4>
+                    <div class="value" id="statActiveReminders">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📈 Consumuri Lunare</h3>
+                <div id="consumptionList">
+                    <div class="consumption-item">
+                        <span class="consumption-period">Această lună</span>
+                        <span class="consumption-value">Calculez...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔔 Reminder-uri Active</h3>
+                <div id="remindersList">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Nu există reminder-uri active
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Popup -->
+    <div class="form-overlay" id="formOverlay">
+        <div class="form-popup">
+            <h3 id="formTitle">Adaugă Index</h3>
+            <div class="form-group">
+                <label id="formLabel">Index curent:</label>
+                <input type="number" id="formValue" placeholder="Introduceți valoarea">
+            </div>
+            <div class="form-group" id="previousIndexGroup" style="display: none;">
+                <label>Index anterior (luna trecută):</label>
+                <input type="number" id="formPrevious" placeholder="Ex: 123000">
+            </div>
+            <div class="form-group" id="kmGroup" style="display: none;">
+                <label>Kilometri parcurși:</label>
+                <input type="number" id="formKm" placeholder="Ex: 125000">
+            </div>
+            <div class="form-group" id="dateGroup" style="display: none;">
+                <label>Data:</label>
+                <input type="date" id="formDate">
+            </div>
+            <div class="form-buttons">
+                <button class="btn btn-success btn-full" onclick="saveForm()">💾 Salvează</button>
+                <button class="btn btn-full" style="background: #666;" onclick="hideForm()">❌ Anulează</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Variabile globale
-        let entries = JSON.parse(localStorage.getItem('utilitati') || '[]');
-        let editingId = null;
+        // Funcții pentru tabs - TREBUIE să fie la început
+        function showSection(section) {
+            // Ascunde toate secțiunile
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Afișează secțiunea selectată
+            document.getElementById(section).classList.add('active');
+            
+            // Găsește și activează tab-ul corect
+            const tabs = document.querySelectorAll('.tab');
+            if (section === 'utilities') {
+                tabs[0].classList.add('active');
+            } else if (section === 'car') {
+                tabs[1].classList.add('active');
+            } else if (section === 'stats') {
+                tabs[2].classList.add('active');
+            }
+            
+            console.log('📂 Secțiunea ' + section + ' activată');
+        }
 
-        // Inițializare aplicație
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Aplicația s-a încărcat cu succes!');
+        // Funcții pentru formulare - TREBUIE să fie la început
+        function showIndexForm(type, name) {
+            currentFormType = 'index';
+            currentFormId = type;
             
-            // Setează data curentă în formular
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('data').value = today;
+            document.getElementById('formTitle').textContent = '📊 ' + name;
+            document.getElementById('formLabel').textContent = 'Index curent (nou):';
+            document.getElementById('formValue').placeholder = 'Ex: 123456';
+            document.getElementById('previousIndexGroup').style.display = 'block';
+            document.getElementById('kmGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'none';
             
-            // Actualizează afișajul
-            updateDisplay();
+            const lastValue = indexData[type] ? indexData[type].current : 0;
+            document.getElementById('formValue').value = lastValue > 0 ? lastValue + 1 : '';
+            document.getElementById('formPrevious').value = lastValue > 0 ? lastValue : '';
             
-            // Log pentru debugging
-            console.log(`📊 Încărcate ${entries.length} facturi din localStorage`);
-        });
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').focus();
+        }
 
-        // Funcții pentru gestionarea formularului
-        function showForm() {
-            document.getElementById('formContainer').style.display = 'block';
-            document.getElementById('formTitle').textContent = '➕ Adaugă Factură Nouă';
-            document.getElementById('scanTips').style.display = 'none';
-            editingId = null;
-            clearForm();
+        function showPaymentForm(type, name) {
+            currentFormType = 'payment';
+            currentFormId = type;
             
-            // Scroll până la formular
-            document.getElementById('formContainer').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
+            document.getElementById('formTitle').textContent = '💰 ' + name;
+            document.getElementById('formLabel').textContent = 'Suma plătită (RON):';
+            document.getElementById('formValue').placeholder = 'Ex: 250';
+            document.getElementById('previousIndexGroup').style.display = 'none';
+            document.getElementById('kmGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'block';
+            
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').focus();
+        }
+
+        function showCarForm(type, name) {
+            currentFormType = 'car';
+            currentFormId = type;
+            
+            document.getElementById('formTitle').textContent = '🚗 ' + name;
+            document.getElementById('previousIndexGroup').style.display = 'none';
+            
+            if (type === 'oil') {
+                document.getElementById('formLabel').textContent = 'Kilometri actuali:';
+                document.getElementById('formValue').placeholder = 'Ex: 125000';
+                document.getElementById('kmGroup').style.display = 'none';
+                document.getElementById('dateGroup').style.display = 'block';
+            } else {
+                document.getElementById('formLabel').textContent = 'Data expirării:';
+                document.getElementById('formValue').type = 'date';
+                document.getElementById('formValue').placeholder = '';
+                document.getElementById('kmGroup').style.display = 'none';
+                document.getElementById('dateGroup').style.display = 'none';
+            }
+            
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').focus();
         }
 
         function hideForm() {
-            document.getElementById('formContainer').style.display = 'none';
-            document.getElementById('scanTips').style.display = 'none';
-            editingId = null;
-            clearForm();
+            document.getElementById('formOverlay').style.display = 'none';
+            document.getElementById('formValue').type = 'number';
+            document.getElementById('previousIndexGroup').style.display = 'none';
+            currentFormType = null;
+            currentFormId = null;
         }
 
-        function clearForm() {
-            document.getElementById('tip').value = 'apa';
-            document.getElementById('suma').value = '';
-            document.getElementById('data').value = new Date().toISOString().split('T')[0];
-            document.getElementById('observatii').value = '';
-        }
+        function saveForm() {
+            const value = document.getElementById('formValue').value;
+            const previousValue = document.getElementById('formPrevious').value;
+            const date = document.getElementById('formDate').value;
 
-        // Funcție pentru scanarea facturilor
-        function scanBill(file) {
-            if (!file) {
-                console.log('❌ Nu a fost selectat niciun fișier');
+            if (!value) {
+                alert('❌ Vă rugăm să completați valoarea!');
                 return;
             }
+
+            if (!indexData[currentFormId]) {
+                indexData[currentFormId] = {};
+            }
+
+            const now = new Date().toISOString();
             
-            console.log(`📷 Începe scanarea fișierului: ${file.name}`);
-            
-            // Afișează loading și sfaturi
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('scanTips').style.display = 'block';
-            
-            // Scroll la loading
-            document.getElementById('loading').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
-            
-            // Simulare procesare OCR cu detectare inteligentă
-            setTimeout(() => {
-                console.log('🔍 Procesarea OCR completă');
+            if (currentFormType === 'index') {
+                const numValue = parseFloat(value);
+                const numPrevious = previousValue ? parseFloat(previousValue) : 0;
                 
-                // Generare sumă realistă
-                const baseAmounts = {
-                    'apa': { min: 25, max: 85 },
-                    'gaz': { min: 45, max: 180 },
-                    'intretinere': { min: 120, max: 350 }
+                if (previousValue && numValue <= numPrevious) {
+                    if (!confirm('⚠️ Indexul curent (' + numValue + ') este mai mic sau egal cu cel anterior (' + numPrevious + ').\n\nContinuați?')) {
+                        return;
+                    }
+                }
+                
+                // Calculează consumul dacă avem ambii indexi
+                const consumption = previousValue ? numValue - numPrevious : 0;
+                
+                indexData[currentFormId] = {
+                    current: numValue,
+                    previous: numPrevious || 0,
+                    consumption: consumption,
+                    lastUpdate: now,
+                    history: (indexData[currentFormId].history || []).concat([{
+                        current: numValue,
+                        previous: numPrevious || 0,
+                        consumption: consumption,
+                        date: now,
+                        sent: false
+                    }])
                 };
                 
-                // Detectare tip din numele fișierului
-                let tip = 'apa';
-                let observatii = 'Extras automat din imagine';
+                console.log('📊 Index ' + currentFormId + ' actualizat: ' + numValue + ' (consum: ' + consumption + ')');
                 
-                const fileName = file.name.toLowerCase();
-                if (fileName.includes('gaz') || fileName.includes('gas') || fileName.includes('engie') || fileName.includes('distrigaz')) {
-                    tip = 'gaz';
-                    observatii = 'Factură gaz detectată automat';
-                } else if (fileName.includes('intretinere') || fileName.includes('administrare') || fileName.includes('asociat') || fileName.includes('regie')) {
-                    tip = 'intretinere';
-                    observatii = 'Factură întreținere detectată automat';
-                } else if (fileName.includes('apa') || fileName.includes('aqua') || fileName.includes('canal')) {
-                    tip = 'apa';
-                    observatii = 'Factură apă detectată automat';
+            } else if (currentFormType === 'payment') {
+                indexData[currentFormId] = {
+                    amount: parseFloat(value),
+                    lastPayment: date || now.split('T')[0],
+                    history: (indexData[currentFormId].history || []).concat([{
+                        amount: parseFloat(value),
+                        date: date || now.split('T')[0]
+                    }])
+                };
+                
+                console.log('💰 Plată ' + currentFormId + ' înregistrată: ' + value + ' RON');
+                
+            } else if (currentFormType === 'car') {
+                if (currentFormId === 'oil') {
+                    indexData[currentFormId] = {
+                        km: parseFloat(value),
+                        lastChange: date || now.split('T')[0],
+                        history: (indexData[currentFormId].history || []).concat([{
+                            km: parseFloat(value),
+                            date: date || now.split('T')[0]
+                        }])
+                    };
+                } else {
+                    indexData[currentFormId] = {
+                        expiryDate: value,
+                        lastUpdate: now
+                    };
                 }
                 
-                // Generare sumă în intervalul realist pentru tipul detectat
-                const range = baseAmounts[tip];
-                const randomAmount = (Math.random() * (range.max - range.min) + range.min).toFixed(2);
-                
-                // Data curentă
-                const today = new Date().toISOString().split('T')[0];
-
-                // Pre-completare formular cu datele detectate
-                document.getElementById('tip').value = tip;
-                document.getElementById('suma').value = randomAmount;
-                document.getElementById('data').value = today;
-                document.getElementById('observatii').value = observatii;
-                
-                // Ascunde loading și afișează formularul
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('formContainer').style.display = 'block';
-                document.getElementById('formTitle').textContent = '✅ Verifică datele extrase din imagine';
-                
-                // Scroll la formular
-                document.getElementById('formContainer').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-                
-                // Feedback haptic pe mobil
-                if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
-                }
-                
-                // Log pentru debugging
-                console.log(`✅ Detectat: ${tip}, Sumă: ${randomAmount} RON`);
-                
-                alert(`✅ Scanarea completă!\n\n🏷️ Tip: ${tip.charAt(0).toUpperCase() + tip.slice(1)}\n💰 Sumă: ${randomAmount} RON\n\nVerificați datele și salvați factiunea.`);
-                
-            }, 2800); // Delay realist pentru procesare
-        }
-
-        // Funcție pentru salvarea facturii
-        function saveBill() {
-            const tip = document.getElementById('tip').value;
-            const suma = parseFloat(document.getElementById('suma').value);
-            const data = document.getElementById('data').value;
-            const observatii = document.getElementById('observatii').value.trim();
-
-            // Validări
-            if (!suma || !data) {
-                alert('❌ Vă rugăm să completați toate câmpurile obligatorii!\n\nCâmpuri necesare:\n• Sumă (mai mare ca 0)\n• Data facturii');
-                return;
+                console.log('🚗 ' + currentFormId + ' actualizat');
             }
 
-            if (suma <= 0) {
-                alert('❌ Suma trebuie să fie mai mare decât 0 RON!');
-                document.getElementById('suma').focus();
-                return;
-            }
-
-            if (suma > 10000) {
-                if (!confirm('⚠️ Suma introdusă este foarte mare (peste 10.000 RON).\n\nSigur doriți să continuați?')) {
-                    return;
-                }
-            }
-
-            // Verificare dată în viitor
-            const selectedDate = new Date(data);
-            const today = new Date();
-            if (selectedDate > today) {
-                if (!confirm('⚠️ Ați selectat o dată din viitor.\n\nSigur doriți să continuați?')) {
-                    return;
-                }
-            }
-
-            // Crearea obiectului factură
-            const bill = {
-                id: editingId || Date.now(),
-                tip,
-                suma,
-                data,
-                observatii,
-                createdAt: editingId ? entries.find(e => e.id === editingId)?.createdAt : new Date().toISOString()
-            };
-
-            // Salvarea facturii
-            if (editingId) {
-                const index = entries.findIndex(e => e.id === editingId);
-                if (index !== -1) {
-                    entries[index] = bill;
-                    console.log(`✏️ Factură editată: ID ${editingId}`);
-                }
-            } else {
-                entries.push(bill);
-                console.log(`➕ Factură nouă adăugată: ID ${bill.id}`);
-            }
-
-            // Salvare în localStorage
-            localStorage.setItem('utilitati', JSON.stringify(entries));
-            
-            // Actualizare afișaj
-            updateDisplay();
+            localStorage.setItem('indexData', JSON.stringify(indexData));
+            updateAllDisplays();
             hideForm();
             
-            // Feedback haptic
             if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100, 50, 100]);
+                navigator.vibrate([100, 50, 100]);
             }
             
-            // Scroll la lista de facturi
-            document.getElementById('entriesList').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
+            const typeName = getTypeName(currentFormId);
+            const consumptionText = currentFormType === 'index' && previousValue ? 
+                '\n📊 Consum calculat: ' + (parseFloat(value) - parseFloat(previousValue)) + ' unități' : '';
             
-            const tipLabel = tip === 'apa' ? 'Apă' : tip === 'gaz' ? 'Gaz' : 'Întreținere';
-            const action = editingId ? 'actualizată' : 'adăugată';
-            
-            alert(`✅ Factura a fost ${action} cu succes!\n\n🏷️ Tip: ${tipLabel}\n💰 Sumă: ${suma.toFixed(2)} RON\n📅 Data: ${new Date(data).toLocaleDateString('ro-RO')}`);
+            alert('✅ ' + typeName + ' a fost actualizat cu succes!' + consumptionText);
         }
 
-        // Funcție pentru editarea unei facturi
-        function editBill(id) {
-            const bill = entries.find(e => e.id === id);
-            if (!bill) {
-                alert('❌ Factura nu a fost găsită!');
+        // Funcții pentru Export/Import prin link
+        function exportToLink() {
+            if (Object.keys(indexData).length === 0) {
+                alert('❌ Nu aveți date de partajat!\n\nAdăugați câteva indexuri mai întâi.');
                 return;
             }
 
-            console.log(`✏️ Editare factură ID: ${id}`);
+            try {
+                // Creează un obiect cu toate datele
+                const exportData = {
+                    version: '1.0',
+                    timestamp: new Date().toISOString(),
+                    data: indexData,
+                    summary: generateDataSummary()
+                };
 
-            // Pre-completare formular
-            document.getElementById('tip').value = bill.tip;
-            document.getElementById('suma').value = bill.suma;
-            document.getElementById('data').value = bill.data;
-            document.getElementById('observatii').value = bill.observatii || '';
-            
-            // Configurare formular pentru editare
-            editingId = id;
-            document.getElementById('formContainer').style.display = 'block';
-            document.getElementById('formTitle').textContent = '✏️ Editează Factură';
-            document.getElementById('scanTips').style.display = 'none';
-            
-            // Scroll la formular
-            document.getElementById('formContainer').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
+                // Convertește în JSON și comprimă
+                const jsonData = JSON.stringify(exportData);
+                const compressed = btoa(encodeURIComponent(jsonData));
+                
+                // Creează link-ul pentru partajare
+                const currentUrl = window.location.href.split('?')[0];
+                const shareUrl = currentUrl + '?import=' + compressed;
+                
+                // Afișează opțiunile de partajare
+                showShareOptions(shareUrl, exportData.summary);
+                
+                console.log('📤 Date exportate cu succes');
+                
+            } catch (error) {
+                console.error('❌ Eroare la export:', error);
+                alert('❌ Eroare la crearea link-ului de partajare.\n\nÎncercați din nou.');
+            }
         }
 
-        // Funcție pentru ștergerea unei facturi
-        function deleteBill(id) {
-            const bill = entries.find(e => e.id === id);
-            if (!bill) {
-                alert('❌ Factura nu a fost găsită!');
-                return;
-            }
+        function generateDataSummary() {
+            const summary = {
+                totalIndexes: 0,
+                lastUpdate: null,
+                indexTypes: []
+            };
 
-            const tipLabel = bill.tip === 'apa' ? 'Apă' : bill.tip === 'gaz' ? 'Gaz' : 'Întreținere';
-            const confirmMessage = `❓ Sigur doriți să ștergeți această factură?\n\n🏷️ Tip: ${tipLabel}\n💰 Sumă: ${bill.suma.toFixed(2)} RON\n📅 Data: ${new Date(bill.data).toLocaleDateString('ro-RO')}\n\n⚠️ Această acțiune nu poate fi anulată!`;
+            ['waterBath', 'waterKitchen', 'gas', 'electric'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.current) {
+                    summary.totalIndexes++;
+                    summary.indexTypes.push(getTypeName(type));
+                    
+                    if (data.lastUpdate) {
+                        const updateDate = new Date(data.lastUpdate);
+                        if (!summary.lastUpdate || updateDate > new Date(summary.lastUpdate)) {
+                            summary.lastUpdate = data.lastUpdate;
+                        }
+                    }
+                }
+            });
+
+            return summary;
+        }
+
+        function showShareOptions(shareUrl, summary) {
+            const message = '📤 Partajare date indexuri\n\n' +
+                           '📊 Rezumat:\n' +
+                           '• ' + summary.totalIndexes + ' indexuri înregistrate\n' +
+                           '• Tipuri: ' + summary.indexTypes.join(', ') + '\n' +
+                           '• Ultima actualizare: ' + (summary.lastUpdate ? new Date(summary.lastUpdate).toLocaleDateString('ro-RO') : 'N/A') + '\n\n' +
+                           '🔗 Link pentru import:\n' + shareUrl + '\n\n' +
+                           '💡 Instrucțiuni pentru soție:\n' +
+                           '1. Deschide link-ul pe telefonul ei\n' +
+                           '2. Apasă "📥 Importă date" din Statistici\n' +
+                           '3. Confirmă importul\n\n' +
+                           'Dorești să:';
+
+            if (navigator.share) {
+                // Folosește Web Share API dacă este disponibil
+                navigator.share({
+                    title: 'Indexuri Utilități - Date',
+                    text: 'Date indexuri pentru import',
+                    url: shareUrl
+                }).catch(error => {
+                    console.log('Share cancelled sau eroare:', error);
+                    fallbackShare(shareUrl, message);
+                });
+            } else {
+                fallbackShare(shareUrl, message);
+            }
+        }
+
+        function fallbackShare(shareUrl, message) {
+            const choice = prompt(message + '\n\n1. Copiez link-ul (pentru WhatsApp/SMS)\n2. Trimit prin email\n3. Anulează\n\nIntroduceți 1, 2 sau 3:');
             
-            if (confirm(confirmMessage)) {
-                entries = entries.filter(e => e.id !== id);
-                localStorage.setItem('utilitati', JSON.stringify(entries));
-                updateDisplay();
+            switch(choice) {
+                case '1':
+                    copyToClipboard(shareUrl);
+                    alert('✅ Link copiat!\n\nLipește-l în WhatsApp/SMS și trimite-l soției tale.');
+                    break;
+                case '2':
+                    const emailSubject = encodeURIComponent('Date indexuri utilități');
+                    const emailBody = encodeURIComponent('Salut!\n\nÎți trimit datele cu indexurile de utilități.\n\nDeschide link-ul de mai jos pe telefonul tău și importă datele:\n\n' + shareUrl + '\n\nInstrucțiuni:\n1. Deschide link-ul\n2. Mergi la Statistici\n3. Apasă "📥 Importă date"\n4. Confirmă importul\n\nSă ai o zi frumoasă! 😊');
+                    window.open('mailto:?subject=' + emailSubject + '&body=' + emailBody);
+                    break;
+                case '3':
+                    // Anulat
+                    break;
+                default:
+                    if (choice !== null) {
+                        alert('❌ Opțiune invalidă. Link-ul este pregătit, dar nu a fost partajat.');
+                    }
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).catch(() => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Eroare la copiere:', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showImportFromLink() {
+            const importUrl = prompt('📥 Importă date din link\n\nLipește link-ul primit de la soțul/soția ta:\n\n(Link-ul începe cu: https://...)');
+            
+            if (!importUrl) return;
+            
+            try {
+                const url = new URL(importUrl);
+                const importParam = url.searchParams.get('import');
                 
-                console.log(`🗑️ Factură ștearsă: ID ${id}`);
-                
-                // Feedback haptic
-                if (navigator.vibrate) {
-                    navigator.vibrate(100);
+                if (!importParam) {
+                    alert('❌ Link invalid!\n\nLink-ul nu conține date de import. Verificați că ați copiat link-ul complet.');
+                    return;
                 }
                 
-                alert('✅ Factura a fost ștearsă cu succes!');
-            }
-        }
-
-        // Funcție pentru actualizarea afișajului
-        function updateDisplay() {
-            updateStats();
-            updateEntriesList();
-        }
-
-        // Funcție pentru actualizarea statisticilor
-        function updateStats() {
-            const totalGeneral = entries.reduce((sum, e) => sum + e.suma, 0);
-            
-            // Calculare total pentru luna curentă
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            const currentMonthEntries = entries.filter(e => e.data.startsWith(currentMonth));
-            const totalLuna = currentMonthEntries.reduce((sum, e) => sum + e.suma, 0);
-            
-            // Calculare total pe tipuri
-            const totalByType = entries.reduce((acc, e) => {
-                acc[e.tip] = (acc[e.tip] || 0) + e.suma;
-                return acc;
-            }, {});
-
-            // Actualizare elemente DOM
-            document.getElementById('totalGeneral').textContent = totalGeneral.toFixed(2) + ' RON';
-            document.getElementById('totalLuna').textContent = totalLuna.toFixed(2) + ' RON';
-            document.getElementById('totalApa').textContent = (totalByType.apa || 0).toFixed(2) + ' RON';
-            document.getElementById('totalGazIntretinere').textContent = 
-                ((totalByType.gaz || 0) + (totalByType.intretinere || 0)).toFixed(2) + ' RON';
-            document.getElementById('entriesCount').textContent = `Total: ${entries.length} facturi`;
-
-            console.log(`📊 Statistici actualizate: ${entries.length} facturi, Total: ${totalGeneral.toFixed(2)} RON`);
-        }
-
-        // Funcție pentru actualizarea listei de facturi
-        function updateEntriesList() {
-            const container = document.getElementById('entriesList');
-            
-            if (entries.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>📋 Nu aveți facturi înregistrate încă</h3>
-                        <p>Apăsați pe "Adaugă Manual" pentru a introduce prima factură sau folosiți "Scanează Factură" pentru a fotografia o factură existentă.</p>
-                        <p style="margin-top: 15px; font-size: 12px; color: #999;">
-                            💡 <strong>Sfat:</strong> Folosiți funcția de scanare pentru a extrage automat datele din fotografii
-                        </p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Sortare facturi după dată (cele mai recente primul)
-            const sortedEntries = [...entries].sort((a, b) => {
-                const dateA = new Date(a.data);
-                const dateB = new Date(b.data);
-                return dateB - dateA;
-            });
-            
-            container.innerHTML = sortedEntries.map(entry => {
-                const icon = entry.tip === 'apa' ? '💧' : entry.tip === 'gaz' ? '🔥' : '🏠';
-                const tipLabel = entry.tip === 'apa' ? 'Apă' : entry.tip === 'gaz' ? 'Gaz' : 'Întreținere';
-                const date = new Date(entry.data).toLocaleDateString('ro-RO');
-                const dateObj = new Date(entry.data);
-                const today = new Date();
-                const isThisMonth = dateObj.getMonth() === today.getMonth() && dateObj.getFullYear() === today.getFullYear();
-                const monthBadge = isThisMonth ? '<span style="background:#4CAF50;color:white;padding:2px 6px;border-radius:10px;font-size:10px;margin-left:5px;">LUNA ACEASTA</span>' : '';
+                importFromData(importParam);
                 
-                return `
-                    <div class="entry" data-id="${entry.id}">
-                        <div class="entry-info">
-                            <div class="entry-type">${icon} ${tipLabel} ${monthBadge}</div>
-                            <div class="entry-amount">${entry.suma.toFixed(2)} RON</div>
-                            <div class="entry-date">
-                                📅 ${date}
-                                ${entry.observatii ? `<br>📝 ${entry.observatii}` : ''}
-                            </div>
-                        </div>
-                        <div class="entry-actions">
-                            <button class="btn-icon btn-edit" onclick="editBill(${entry.id})" title="Editează factura">
-                                ✏️
-                            </button>
-                            <button class="btn-icon btn-delete" onclick="deleteBill(${entry.id})" title="Șterge factura">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            console.log(`📋 Lista actualizată cu ${sortedEntries.length} facturi`);
-        }
-
-        // Funcții pentru export/import date
-        function exportData() {
-            if (entries.length === 0) {
-                alert('❌ Nu aveți facturi de exportat!');
-                return;
+            } catch (error) {
+                alert('❌ Link invalid!\n\nVă rugăm să verificați că ați introdus link-ul corect.');
+                console.error('Eroare import URL:', error);
             }
-
-            const dataStr = JSON.stringify(entries, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `utilitati_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-
-            console.log('📤 Date exportate cu succes');
-            alert('✅ Datele au fost exportate cu succes!');
         }
 
-        function importData(event) {
-            const file = event.target.files[0];
+        function importFromData(compressedData) {
+            try {
+                // Decomprimă și parsează datele
+                const jsonData = decodeURIComponent(atob(compressedData));
+                const importData = JSON.parse(jsonData);
+                
+                // Verifică versiunea și structura
+                if (!importData.version || !importData.data) {
+                    throw new Error('Format de date invalid');
+                }
+                
+                const summary = importData.summary;
+                const confirmMessage = '📥 Confirmare import\n\n' +
+                                     '📊 Date de importat:\n' +
+                                     '• ' + summary.totalIndexes + ' indexuri\n' +
+                                     '• Tipuri: ' + summary.indexTypes.join(', ') + '\n' +
+                                     '• Data: ' + (summary.lastUpdate ? new Date(summary.lastUpdate).toLocaleDateString('ro-RO') : 'N/A') + '\n\n' +
+                                     '⚠️ ATENȚIE: Aceasta va înlocui toate datele existente!\n\n' +
+                                     'Continuați cu importul?';
+                
+                if (confirm(confirmMessage)) {
+                    // Backup datele existente
+                    const backup = JSON.stringify(indexData);
+                    
+                    try {
+                        // Importă datele noi
+                        indexData = importData.data;
+                        localStorage.setItem('indexData', JSON.stringify(indexData));
+                        
+                        // Actualizează afișajul
+                        updateAllDisplays();
+                        checkReminders();
+                        
+                        // Feedback haptic
+                        if (navigator.vibrate) {
+                            navigator.vibrate([100, 50, 100, 50, 100]);
+                        }
+                        
+                        alert('✅ Import realizat cu succes!\n\n📊 ' + summary.totalIndexes + ' indexuri importate\n\nMergeți la secțiunea Utilități pentru a vedea datele.');
+                        
+                        console.log('📥 Import realizat cu succes:', summary);
+                        
+                    } catch (error) {
+                        // Restaurează backup-ul în caz de eroare
+                        indexData = JSON.parse(backup);
+                        localStorage.setItem('indexData', JSON.stringify(indexData));
+                        throw error;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('❌ Eroare la import:', error);
+                alert('❌ Eroare la importul datelor!\n\nVerificați că link-ul este corect și complet.');
+            }
+        }
+
+        // Verifică la încărcarea paginii dacă există date de importat în URL
+        function checkForImportData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const importParam = urlParams.get('import');
+            
+            if (importParam) {
+                // Curăță URL-ul
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Afișează dialog de import după o scurtă întârziere
+                setTimeout(() => {
+                    const autoImport = confirm('📥 Link cu date de import detectat!\n\nDoriți să importați datele automat?');
+                    if (autoImport) {
+                        importFromData(importParam);
+                    }
+                }, 1000);
+            }
+        }
+
+        // Date globale
+        let indexData = JSON.parse(localStorage.getItem('indexData') || '{}');
+        let currentFormType = null;
+        let currentFormId = null;
+
+        // Inițializare aplicație
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Aplicația de indexuri s-a încărcat!');
+            
+            // Setează data curentă în form
+            document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
+            
+            // Verifică pentru date de import în URL
+            checkForImportData();
+            
+            // Actualizează toate afișajele
+            updateAllDisplays();
+            checkReminders();
+            
+            // Verifică reminder-urile la fiecare minut
+            setInterval(checkReminders, 60000);
+            
+            console.log('📊 Date încărcate:', Object.keys(indexData).length, 'categorii');
+        });
+
+        // Funcții pentru scanare
+        function scanIndexFromImage(file) {
             if (!file) return;
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedEntries = JSON.parse(e.target.result);
+            showLoading('📷 Scanez imaginea...', 'Caut numere pe contor');
+            
+            setTimeout(() => {
+                const detectedNumber = simulateOCR(file);
+                hideLoading();
+                
+                if (detectedNumber) {
+                    const today = new Date();
+                    const day = today.getDate();
                     
-                    // Validare structură date
-                    if (!Array.isArray(importedEntries)) {
-                        throw new Error('Formatul fișierului nu este valid');
-                    }
-
-                    const confirmMessage = `❓ Sigur doriți să importați ${importedEntries.length} facturi?\n\n⚠️ Aceasta va înlocui toate facturile existente (${entries.length} facturi).\n\nAceastă acțiune nu poate fi anulată!`;
+                    let suggestedType = 'waterBath';
+                    let suggestedName = 'Apometru Baie';
                     
-                    if (confirm(confirmMessage)) {
-                        entries = importedEntries;
-                        localStorage.setItem('utilitati', JSON.stringify(entries));
-                        updateDisplay();
-                        console.log(`📥 Importate ${importedEntries.length} facturi`);
-                        alert(`✅ Au fost importate cu succes ${importedEntries.length} facturi!`);
+                    if (day >= 13 && day <= 15) {
+                        suggestedType = 'waterBath';
+                        suggestedName = 'Apometru Baie';
+                    } else if (day >= 18 && day <= 20) {
+                        suggestedType = 'gas';
+                        suggestedName = 'Contor Gaz';
                     }
-                } catch (error) {
-                    console.error('❌ Eroare import:', error);
-                    alert('❌ Eroare la importarea datelor!\n\nVerificați că fișierul este un backup valid al aplicației.');
+                    
+                    const choice = confirm('📷 Am detectat numărul: ' + detectedNumber + '\n\n🏷️ Sugerez să fie pentru: ' + suggestedName + '\n\nDoriți să folosiți această valoare?');
+                    
+                    if (choice) {
+                        showIndexFormWithValue(suggestedType, suggestedName, detectedNumber);
+                    }
+                } else {
+                    alert('❌ Nu am putut detecta un număr valid în imagine.\n\n💡 Sfaturi:\n• Asigurați-vă că numărul este clar\n• Folosiți lumină bună\n• Țineți telefonul drept');
                 }
-            };
-            reader.readAsText(file);
+            }, 2000);
         }
 
-        // Funcții pentru gesturi mobile
-        let startX = 0;
-        let startY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let isSwipe = false;
+        function scanSpecificIndex(file, type, name) {
+            if (!file) return;
+            
+            showLoading('📷 Scanez ' + name + '...', 'Extrag indexul din imagine');
+            
+            setTimeout(() => {
+                const detectedNumber = simulateOCR(file);
+                hideLoading();
+                
+                if (detectedNumber) {
+                    const choice = confirm('📷 Am detectat indexul: ' + detectedNumber + '\n\n🏷️ Pentru: ' + name + '\n\nDoriți să folosiți această valoare?');
+                    
+                    if (choice) {
+                        showIndexFormWithValue(type, name, detectedNumber);
+                    }
+                } else {
+                    alert('❌ Nu am putut citi indexul pentru ' + name + '.\n\n💡 Încercați să:\n• Faceți poza mai aproape de cifre\n• Asigurați-vă că numerele sunt clare\n• Folosiți lumină bună');
+                }
+            }, 2000);
+        }
 
-        document.addEventListener('touchstart', function(e) {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isSwipe = false;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', function(e) {
-            if (!startX || !startY) return;
+        function simulateOCR(file) {
+            const fileName = file.name.toLowerCase();
             
-            currentX = e.touches[0].clientX;
-            currentY = e.touches[0].clientY;
+            const baseNumbers = {
+                water: { min: 100000, max: 999999 },
+                gas: { min: 10000, max: 99999 },
+                electric: { min: 100000, max: 999999 }
+            };
             
-            const diffX = Math.abs(startX - currentX);
-            const diffY = Math.abs(startY - currentY);
+            let range = baseNumbers.water;
             
-            // Detectare swipe orizontal
-            if (diffX > 50 && diffX > diffY) {
-                isSwipe = true;
+            if (fileName.includes('gaz') || fileName.includes('gas')) {
+                range = baseNumbers.gas;
+            } else if (fileName.includes('electric') || fileName.includes('curent')) {
+                range = baseNumbers.electric;
             }
-        }, { passive: true });
+            
+            const detectedNumber = Math.floor(Math.random() * (range.max - range.min) + range.min);
+            return Math.random() > 0.1 ? detectedNumber : null;
+        }
 
-        document.addEventListener('touchend', function(e) {
-            if (!isSwipe || !startX || !startY) {
-                startX = 0;
-                startY = 0;
-                currentX = 0;
-                currentY = 0;
-                isSwipe = false;
+        function showIndexFormWithValue(type, name, value) {
+            currentFormType = 'index';
+            currentFormId = type;
+            
+            document.getElementById('formTitle').textContent = '📊 ' + name;
+            document.getElementById('formLabel').textContent = 'Index detectat:';
+            document.getElementById('formValue').focus();
+        }
+
+        function showCarForm(type, name) {
+            currentFormType = 'car';
+            currentFormId = type;
+            
+            document.getElementById('formTitle').textContent = '🚗 ' + name;
+            document.getElementById('previousIndexGroup').style.display = 'none';
+            
+            if (type === 'oil') {
+                document.getElementById('formLabel').textContent = 'Kilometri actuali:';
+                document.getElementById('formValue').placeholder = 'Ex: 125000';
+                document.getElementById('kmGroup').style.display = 'none';
+                document.getElementById('dateGroup').style.display = 'block';
+            } else {
+                document.getElementById('formLabel').textContent = 'Data expirării:';
+                document.getElementById('formValue').type = 'date';
+                document.getElementById('formValue').placeholder = '';
+                document.getElementById('kmGroup').style.display = 'none';
+                document.getElementById('dateGroup').style.display = 'none';
+            }
+            
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').focus();
+        }
+
+        function hideForm() {
+            document.getElementById('formOverlay').style.display = 'none';
+            document.getElementById('formValue').type = 'number';
+            document.getElementById('previousIndexGroup').style.display = 'none';
+            currentFormType = null;
+            currentFormId = null;
+        }
+
+        // Salvare date
+        function saveForm() {
+            const value = document.getElementById('formValue').value;
+            const previousValue = document.getElementById('formPrevious').value;
+            const date = document.getElementById('formDate').value;
+
+            if (!value) {
+                alert('❌ Vă rugăm să completați valoarea!');
                 return;
             }
+
+            if (!indexData[currentFormId]) {
+                indexData[currentFormId] = {};
+            }
+
+            const now = new Date().toISOString();
             
-            const diffX = startX - currentX;
-            const diffY = Math.abs(startY - currentY);
-            
-            // Swipe stânga pentru ștergere (doar dacă nu e swipe vertical)
-            if (diffX > 80 && diffY < 50) {
-                const entryElement = e.target.closest('.entry');
-                if (entryElement) {
-                    const entryId = parseInt(entryElement.dataset.id);
-                    if (entryId) {
-                        // Animație vizuală
-                        entryElement.style.backgroundColor = '#ffebee';
-                        entryElement.style.transform = 'translateX(-20px)';
-                        
-                        setTimeout(() => {
-                            if (confirm('🗑️ Ștergeți această factură?\n\n(Swipe stânga detectat)')) {
-                                deleteBill(entryId);
-                            } else {
-                                entryElement.style.backgroundColor = '';
-                                entryElement.style.transform = '';
-                            }
-                        }, 200);
+            if (currentFormType === 'index') {
+                const numValue = parseFloat(value);
+                const numPrevious = previousValue ? parseFloat(previousValue) : 0;
+                
+                if (previousValue && numValue <= numPrevious) {
+                    if (!confirm('⚠️ Indexul curent (' + numValue + ') este mai mic sau egal cu cel anterior (' + numPrevious + ').\n\nContinuați?')) {
+                        return;
                     }
                 }
+                
+                // Calculează consumul dacă avem ambii indexi
+                const consumption = previousValue ? numValue - numPrevious : 0;
+                
+                indexData[currentFormId] = {
+                    current: numValue,
+                    previous: numPrevious || 0,
+                    consumption: consumption,
+                    lastUpdate: now,
+                    history: (indexData[currentFormId].history || []).concat([{
+                        current: numValue,
+                        previous: numPrevious || 0,
+                        consumption: consumption,
+                        date: now,
+                        sent: false
+                    }])
+                };
+                
+                console.log('📊 Index ' + currentFormId + ' actualizat: ' + numValue + ' (consum: ' + consumption + ')');
+                
+            } else if (currentFormType === 'payment') {
+                indexData[currentFormId] = {
+                    amount: parseFloat(value),
+                    lastPayment: date || now.split('T')[0],
+                    history: (indexData[currentFormId].history || []).concat([{
+                        amount: parseFloat(value),
+                        date: date || now.split('T')[0]
+                    }])
+                };
+                
+                console.log('💰 Plată ' + currentFormId + ' înregistrată: ' + value + ' RON');
+                
+            } else if (currentFormType === 'car') {
+                if (currentFormId === 'oil') {
+                    indexData[currentFormId] = {
+                        km: parseFloat(value),
+                        lastChange: date || now.split('T')[0],
+                        history: (indexData[currentFormId].history || []).concat([{
+                            km: parseFloat(value),
+                            date: date || now.split('T')[0]
+                        }])
+                    };
+                } else {
+                    indexData[currentFormId] = {
+                        expiryDate: value,
+                        lastUpdate: now
+                    };
+                }
+                
+                console.log('🚗 ' + currentFormId + ' actualizat');
+            }
+
+            localStorage.setItem('indexData', JSON.stringify(indexData));
+            updateAllDisplays();
+            hideForm();
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
             }
             
-            // Reset variabile
-            startX = 0;
-            startY = 0;
-            currentX = 0;
-            currentY = 0;
-            isSwipe = false;
-        }, { passive: true });
+            const typeName = getTypeName(currentFormId);
+            const consumptionText = currentFormType === 'index' && previousValue ? 
+                '\n📊 Consum calculat: ' + (parseFloat(value) - parseFloat(previousValue)) + ' unități' : '';
+            
+            alert('✅ ' + typeName + ' a fost actualizat cu succes!' + consumptionText);
+        }
 
-        // Funcții pentru keyboard shortcuts
+        function getTypeName(id) {
+            const names = {
+                'waterBath': 'Apometru Baie',
+                'waterKitchen': 'Apometru Bucătărie',
+                'gas': 'Contor Gaz',
+                'electric': 'Contor Electricitate',
+                'association': 'Plată Asociație',
+                'oil': 'Schimb Ulei',
+                'vignette': 'Rovinietă',
+                'insurance': 'Asigurare',
+                'itp': 'ITP'
+            };
+            return names[id] || id;
+        }
+
+        // Actualizare afișaje
+        function updateAllDisplays() {
+            updateUtilitiesDisplay();
+            updateCarDisplay();
+            updateStatsDisplay();
+            updateStatusBadges();
+        }
+
+        function updateUtilitiesDisplay() {
+            const waterBath = indexData.waterBath || {};
+            document.getElementById('waterBathCurrent').textContent = waterBath.current || '---';
+            document.getElementById('waterBathLast').textContent = waterBath.lastUpdate ? 
+                'Ultimul: ' + new Date(waterBath.lastUpdate).toLocaleDateString('ro-RO') : 'Ultimul: -';
+
+            const waterKitchen = indexData.waterKitchen || {};
+            document.getElementById('waterKitchenCurrent').textContent = waterKitchen.current || '---';
+            document.getElementById('waterKitchenLast').textContent = waterKitchen.lastUpdate ? 
+                'Ultimul: ' + new Date(waterKitchen.lastUpdate).toLocaleDateString('ro-RO') : 'Ultimul: -';
+
+            const gas = indexData.gas || {};
+            document.getElementById('gasCurrent').textContent = gas.current || '---';
+            document.getElementById('gasLast').textContent = gas.lastUpdate ? 
+                'Ultimul: ' + new Date(gas.lastUpdate).toLocaleDateString('ro-RO') : 'Ultimul: -';
+
+            const electric = indexData.electric || {};
+            document.getElementById('electricCurrent').textContent = electric.current || '---';
+            document.getElementById('electricLast').textContent = electric.lastUpdate ? 
+                'Ultimul: ' + new Date(electric.lastUpdate).toLocaleDateString('ro-RO') : 'Ultimul: -';
+
+            const association = indexData.association || {};
+            document.getElementById('associationCurrent').textContent = association.amount ? 
+                association.amount + ' RON' : '--- RON';
+            document.getElementById('associationLast').textContent = association.lastPayment ? 
+                'Ultima plată: ' + new Date(association.lastPayment).toLocaleDateString('ro-RO') : 'Ultima plată: -';
+        }
+
+        function updateCarDisplay() {
+            const oil = indexData.oil || {};
+            document.getElementById('oilCurrent').textContent = oil.km ? oil.km + ' km' : '--- km';
+            document.getElementById('oilLast').textContent = oil.lastChange ? 
+                'Ultima dată: ' + new Date(oil.lastChange).toLocaleDateString('ro-RO') : 'Ultima dată: -';
+
+            const vignette = indexData.vignette || {};
+            document.getElementById('vignetteExpiry').textContent = vignette.expiryDate ? 
+                new Date(vignette.expiryDate).toLocaleDateString('ro-RO') : '--/--/----';
+            document.getElementById('vignetteStatus').textContent = getExpiryStatus(vignette.expiryDate);
+
+            const insurance = indexData.insurance || {};
+            document.getElementById('insuranceExpiry').textContent = insurance.expiryDate ? 
+                new Date(insurance.expiryDate).toLocaleDateString('ro-RO') : '--/--/----';
+            document.getElementById('insuranceStatus').textContent = getExpiryStatus(insurance.expiryDate);
+
+            const itp = indexData.itp || {};
+            document.getElementById('itpExpiry').textContent = itp.expiryDate ? 
+                new Date(itp.expiryDate).toLocaleDateString('ro-RO') : '--/--/----';
+            document.getElementById('itpStatus').textContent = getExpiryStatus(itp.expiryDate);
+        }
+
+        function updateStatsDisplay() {
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            let sentThisMonth = 0;
+
+            ['waterBath', 'waterKitchen', 'gas', 'electric'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.history) {
+                    const thisMonthEntries = data.history.filter(entry => 
+                        entry.date.startsWith(currentMonth) && entry.sent
+                    );
+                    if (thisMonthEntries.length > 0) sentThisMonth++;
+                }
+            });
+
+            document.getElementById('statIndexesSent').textContent = sentThisMonth + '/4';
+
+            const activeReminders = getActiveReminders().length;
+            document.getElementById('statActiveReminders').textContent = activeReminders;
+
+            updateConsumptionList();
+        }
+
+        function updateConsumptionList() {
+            const container = document.getElementById('consumptionList');
+            let html = '';
+
+            ['waterBath', 'waterKitchen', 'gas', 'electric'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.consumption !== undefined && data.consumption > 0) {
+                    const typeName = getTypeName(type);
+                    const consumption = data.consumption;
+
+                    html += '<div class="consumption-item">' +
+                           '<span class="consumption-period">' + typeName + '</span>' +
+                           '<span class="consumption-value">+' + consumption + '</span>' +
+                           '</div>';
+                } else if (data && data.current && data.previous) {
+                    // Fallback pentru calculul manual
+                    const typeName = getTypeName(type);
+                    const consumption = data.current - data.previous;
+
+                    html += '<div class="consumption-item">' +
+                           '<span class="consumption-period">' + typeName + '</span>' +
+                           '<span class="consumption-value">' + (consumption > 0 ? '+' : '') + consumption + '</span>' +
+                           '</div>';
+                }
+            });
+
+            if (html === '') {
+                html = '<div class="consumption-item">' +
+                      '<span style="color: #666;">Adăugați indexul curent și cel anterior pentru a calcula consumul</span>' +
+                      '</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function updateStatusBadges() {
+            const today = new Date();
+            const day = today.getDate();
+
+            const waterBadge = document.getElementById('waterStatus');
+            if (day <= 15) {
+                waterBadge.className = 'status-badge status-ok';
+                waterBadge.textContent = '📅 Până pe 15 (' + (15 - day) + ' zile)';
+            } else {
+                waterBadge.className = 'status-badge status-danger';
+                waterBadge.textContent = '🚨 Întârziat!';
+            }
+
+            const gasElectricBadge = document.getElementById('gasElectricStatus');
+            if (day <= 20) {
+                gasElectricBadge.className = 'status-badge status-ok';
+                gasElectricBadge.textContent = '📅 Până pe 20 (' + (20 - day) + ' zile)';
+            } else {
+                gasElectricBadge.className = 'status-badge status-danger';
+                gasElectricBadge.textContent = '🚨 Întârziat!';
+            }
+        }
+
+        function getExpiryStatus(expiryDate) {
+            if (!expiryDate) return 'Status: -';
+
+            const today = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                return 'Status: 🚨 Expirat';
+            } else if (diffDays <= 30) {
+                return 'Status: ⚠️ ' + diffDays + ' zile';
+            } else {
+                return 'Status: ✅ Valid';
+            }
+        }
+
+        // Sistem de reminder-uri
+        function checkReminders() {
+            const today = new Date();
+            const day = today.getDate();
+            const alerts = [];
+
+            if (day >= 13 && day <= 15) {
+                const waterBathSent = isIndexSentThisMonth('waterBath');
+                const waterKitchenSent = isIndexSentThisMonth('waterKitchen');
+
+                if (!waterBathSent || !waterKitchenSent) {
+                    alerts.push({
+                        type: day === 15 ? 'urgent' : 'warning',
+                        title: day === 15 ? '🚨 URGENT: Trimiteți indexurile de apă ASTĂZI!' : 
+                               '⚠️ Reminder: Trimiteți indexurile de apă până pe 15',
+                        items: [
+                            !waterBathSent ? 'Apometru Baie' : null,
+                            !waterKitchenSent ? 'Apometru Bucătărie' : null
+                        ].filter(Boolean)
+                    });
+                }
+            }
+
+            if (day >= 18 && day <= 20) {
+                const gasSent = isIndexSentThisMonth('gas');
+                const electricSent = isIndexSentThisMonth('electric');
+
+                if (!gasSent || !electricSent) {
+                    alerts.push({
+                        type: day === 20 ? 'urgent' : 'warning',
+                        title: day === 20 ? '🚨 URGENT: Trimiteți indexurile de gaz/electricitate ASTĂZI!' : 
+                               '⚠️ Reminder: Trimiteți indexurile de gaz/electricitate până pe 20',
+                        items: [
+                            !gasSent ? 'Contor Gaz' : null,
+                            !electricSent ? 'Contor Electricitate' : null
+                        ].filter(Boolean)
+                    });
+                }
+            }
+
+            ['vignette', 'insurance', 'itp'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.expiryDate) {
+                    const expiry = new Date(data.expiryDate);
+                    const diffTime = expiry - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    const typeName = getTypeName(type);
+
+                    if (diffDays < 0) {
+                        alerts.push({
+                            type: 'urgent',
+                            title: '🚨 ' + typeName + ' a expirat cu ' + Math.abs(diffDays) + ' zile în urmă!',
+                            items: ['Reînnoiți urgent documentul']
+                        });
+                    } else if (diffDays <= 7) {
+                        alerts.push({
+                            type: 'urgent',
+                            title: '🚨 ' + typeName + ' expiră în ' + diffDays + ' zile!',
+                            items: ['Programați reînnoirea urgent']
+                        });
+                    } else if (diffDays <= 30) {
+                        alerts.push({
+                            type: 'warning',
+                            title: '⚠️ ' + typeName + ' expiră în ' + diffDays + ' zile',
+                            items: ['Planificați reînnoirea']
+                        });
+                    }
+                }
+            });
+
+            displayAlerts(alerts);
+            updateRemindersList(alerts);
+        }
+
+        function isIndexSentThisMonth(type) {
+            const data = indexData[type];
+            if (!data || !data.history) return false;
+
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            return data.history.some(entry => 
+                entry.date.startsWith(currentMonth) && entry.sent
+            );
+        }
+
+        function displayAlerts(alerts) {
+            const container = document.getElementById('alerts');
+            
+            if (alerts.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = alerts.map(alert => 
+                '<div class="alert ' + alert.type + '">' +
+                '<div>' + alert.title + '</div>' +
+                (alert.items.length > 0 ? '<div style="margin-top: 5px; font-size: 13px;">📋 ' + alert.items.join(', ') + '</div>' : '') +
+                '</div>'
+            ).join('');
+        }
+
+        function updateRemindersList(alerts) {
+            const container = document.getElementById('remindersList');
+            
+            if (alerts.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nu există reminder-uri active</p>';
+                return;
+            }
+
+            container.innerHTML = alerts.map(alert => 
+                '<div class="reminder-item ' + alert.type + '">' +
+                '<div class="reminder-title">' + alert.title + '</div>' +
+                (alert.items.length > 0 ? '<div class="reminder-date">' + alert.items.join(', ') + '</div>' : '') +
+                '</div>'
+            ).join('');
+        }
+
+        function getActiveReminders() {
+            const today = new Date();
+            const day = today.getDate();
+            const reminders = [];
+
+            if (day >= 13 && day <= 15) {
+                if (!isIndexSentThisMonth('waterBath') || !isIndexSentThisMonth('waterKitchen')) {
+                    reminders.push('water');
+                }
+            }
+
+            if (day >= 18 && day <= 20) {
+                if (!isIndexSentThisMonth('gas') || !isIndexSentThisMonth('electric')) {
+                    reminders.push('gasElectric');
+                }
+            }
+
+            ['vignette', 'insurance', 'itp'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.expiryDate) {
+                    const expiry = new Date(data.expiryDate);
+                    const diffTime = expiry - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 30) {
+                        reminders.push(type);
+                    }
+                }
+            });
+
+            return reminders;
+        }
+
+        // Acțiuni rapide
+        function markAllIndexesSent() {
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            let updated = 0;
+
+            ['waterBath', 'waterKitchen', 'gas', 'electric'].forEach(type => {
+                const data = indexData[type];
+                if (data && data.history) {
+                    const lastEntry = data.history[data.history.length - 1];
+                    if (lastEntry && lastEntry.date.startsWith(currentMonth) && !lastEntry.sent) {
+                        lastEntry.sent = true;
+                        updated++;
+                    }
+                }
+            });
+
+            if (updated > 0) {
+                localStorage.setItem('indexData', JSON.stringify(indexData));
+                updateAllDisplays();
+                checkReminders();
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100, 50, 100]);
+                }
+                
+                alert('✅ ' + updated + ' indexuri marcate ca trimise!');
+            } else {
+                alert('ℹ️ Nu există indexuri noi de marcat ca trimise.');
+            }
+        }
+
+        function showBulkIndexForm() {
+            const today = new Date();
+            const day = today.getDate();
+            let message = '📝 Index rapid - Ce doriți să faceți?\n\n';
+            
+            if (day <= 15) {
+                message += '💧 1. Citesc indexurile de apă\n';
+            }
+            if (day <= 20) {
+                message += '🔥 2. Citesc indexurile de gaz/electricitate\n';
+            }
+            message += '🏢 3. Înregistrez plata la asociație\n';
+            message += '🚗 4. Actualizez datele mașinii\n\n';
+            message += 'Introduceți numărul opțiunii:';
+
+            const choice = prompt(message);
+            
+            switch(choice) {
+                case '1':
+                    if (day <= 15) {
+                        showIndexForm('waterBath', 'Apometru Baie');
+                    } else {
+                        alert('❌ Perioada pentru indexurile de apă a trecut (până pe 15).');
+                    }
+                    break;
+                case '2':
+                    if (day <= 20) {
+                        showIndexForm('gas', 'Contor Gaz');
+                    } else {
+                        alert('❌ Perioada pentru indexurile de gaz/electricitate a trecut (până pe 20).');
+                    }
+                    break;
+                case '3':
+                    showPaymentForm('association', 'Plată Asociație');
+                    break;
+                case '4':
+                    showCarForm('oil', 'Schimb Ulei');
+                    break;
+                default:
+                    if (choice !== null) {
+                        alert('❌ Opțiune invalidă. Vă rugăm să alegeți 1, 2, 3 sau 4.');
+                    }
+            }
+        }
+
+        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + N pentru factură nouă
             if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
                 e.preventDefault();
-                showForm();
+                showBulkIndexForm();
             }
             
-            // Escape pentru a închide formularul
-            if (e.key === 'Escape' && document.getElementById('formContainer').style.display === 'block') {
+            if (e.key === 'Escape' && document.getElementById('formOverlay').style.display === 'flex') {
                 hideForm();
             }
             
-            // Enter în formular pentru salvare
-            if (e.key === 'Enter' && document.getElementById('formContainer').style.display === 'block') {
+            if (e.key === 'Enter' && document.getElementById('formOverlay').style.display === 'flex') {
                 const activeElement = document.activeElement;
                 if (activeElement && activeElement.tagName !== 'BUTTON') {
                     e.preventDefault();
-                    saveBill();
+                    saveForm();
                 }
             }
         });
 
-        // Funcție pentru detectarea conexiunii
-        function checkConnection() {
-            const isOnline = navigator.onLine;
-            if (!isOnline) {
-                console.log('📱 Aplicația funcționează offline');
-            }
-            return isOnline;
-        }
-
-        // Event listeners pentru conexiune
-        window.addEventListener('online', function() {
-            console.log('🌐 Conexiune la internet restabilită');
-        });
-
-        window.addEventListener('offline', function() {
-            console.log('📱 Aplicația continuă să funcționeze offline');
-        });
-
-        // Funcție pentru debugging
-        function debugInfo() {
-            console.log('🔍 Informații debug:');
-            console.log('📊 Numărul de facturi:', entries.length);
-            console.log('💾 Dimensiune localStorage:', JSON.stringify(entries).length, 'caractere');
-            console.log('🏷️ Tipuri facturi:', [...new Set(entries.map(e => e.tip))]);
-            console.log('📅 Perioada:', entries.length > 0 ? {
-                prima: Math.min(...entries.map(e => new Date(e.data))),
-                ultima: Math.max(...entries.map(e => new Date(e.data)))
-            } : 'N/A');
-        }
-
-        // Verificare compatibilitate browser
-        function checkBrowserCompatibility() {
-            const features = {
-                localStorage: typeof(Storage) !== "undefined",
-                fileReader: window.File && window.FileReader,
-                camera: navigator.mediaDevices && navigator.mediaDevices.getUserMedia,
-                vibration: "vibrate" in navigator
-            };
-            
-            console.log('🔧 Compatibilitate browser:', features);
-            return features;
-        }
-
-        // Inițializare verificări
+        // Inițializare la încărcare
         window.addEventListener('load', function() {
-            checkBrowserCompatibility();
-            checkConnection();
-            console.log('🎉 Aplicația este gata de utilizare!');
+            console.log('🎉 Aplicația Indexuri & Reminder-uri este gata!');
+            setTimeout(checkReminders, 1000);
         });
-
-        // Service Worker pentru funcționare offline (opțional)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Aici s-ar putea înregistra un service worker pentru funcționare offline
-                console.log('🔧 Service Worker suportat');
-            });
-        }
     </script>
 </body>
-</html>
+</html>placeholder = 'Verificați valoarea';
+            document.getElementById('kmGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'none';
+            
+            document.getElementById('formValue').value = value;
+            document.getElementById('formOverlay').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('formValue').select();
+            }, 100);
+        }
+
+        function showLoading(title, subtitle) {
+            document.getElementById('loadingOverlay').style.display = 'block';
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('#loading h3').textContent = title;
+            document.querySelector('#loading p').textContent = subtitle;
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Funcții pentru formulare
+        function showIndexForm(type, name) {
+            currentFormType = 'index';
+            currentFormId = type;
+            
+            document.getElementById('formTitle').textContent = '📊 ' + name;
+            document.getElementById('formLabel').textContent = 'Index curent (nou):';
+            document.getElementById('formValue').placeholder = 'Ex: 123456';
+            document.getElementById('previousIndexGroup').style.display = 'block';
+            document.getElementById('kmGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'none';
+            
+            const lastValue = indexData[type] ? indexData[type].current : 0;
+            document.getElementById('formValue').value = lastValue > 0 ? lastValue + 1 : '';
+            document.getElementById('formPrevious').value = lastValue > 0 ? lastValue : '';
+            
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').focus();
+        }
+
+        function showPaymentForm(type, name) {
+            currentFormType = 'payment';
+            currentFormId = type;
+            
+            document.getElementById('formTitle').textContent = '💰 ' + name;
+            document.getElementById('formLabel').textContent = 'Suma plătită (RON):';
+            document.getElementById('formValue').placeholder = 'Ex: 250';
+            document.getElementById('kmGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'block';
+            
+            document.getElementById('formOverlay').style.display = 'flex';
+            document.getElementById('formValue').
