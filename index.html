@@ -37,6 +37,10 @@
         <div class="header">
             <h1>📊 Indexuri & Reminder-uri</h1>
             <p>Gestionați indexurile utilitățților și reminder-urile auto</p>
+            <!-- Indicator sincronizare -->
+            <div id="syncIndicator" class="sync-indicator disconnected">
+                ⚠️ Nu e configurat partenerul
+            </div>
         </div>
 
         <!-- Alertele active -->
@@ -66,6 +70,9 @@
                 </button>
                 <button class="btn quick-btn btn-warning" onclick="showBulkIndexForm()">
                     📝 Index rapid
+                </button>
+                <button class="btn quick-btn quick-sync-btn sync-action" onclick="quickSync()">
+                    🔄 Sincronizează
                 </button>
                 <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
                     📤 Partajează
@@ -260,6 +267,24 @@
                     <p style="color: #666; text-align: center; padding: 20px;">
                         Nu există reminder-uri active
                     </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Setări Sincronizare</h3>
+                <div class="sync-settings">
+                    <h4>🔄 Configurare Partener</h4>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">
+                        Configurează sincronizarea automată cu partenerul tău
+                    </p>
+                    <div class="btn-group">
+                        <button class="btn setup-partner-btn" onclick="setupPartner()">
+                            👤 Configurează Partener
+                        </button>
+                        <button class="btn" onclick="showSyncSettings()" style="background: #6c757d;">
+                            ⚙️ Setări Avansate
+                        </button>
+                    </div>
                 </div>
             </div>
 
