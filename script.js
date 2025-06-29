@@ -198,6 +198,358 @@ function saveForm() {
     alert('✅ ' + typeName + ' a fost actualizat cu succes!' + consumptionText);
 }
 
+// ========== FUNCȚII PENTRU ȘTERGERE ==========
+
+function showDeleteOptions(type, name) {
+    const data = indexData[type];
+    if (!data) {
+        alert('❌ Nu există date de șters pentru ' + name);
+        return;
+    }
+
+    document.getElementById('deleteTitle').textContent = '🗑️ Ștergere ' + name;
+    
+    let content = '<p>Ce doriți să ștergeți?</p>';
+    content += '<div style="display: flex; flex-direction: column; gap: 10px; margin: 15px 0;">';
+    
+    // Opțiuni pentru indexuri (apă, gaz, electricitate)
+    if (data.current !== undefined && (type === 'waterBath' || type === 'waterKitchen' || type === 'gas' || type === 'electric')) {
+        content += '<button class="btn btn-danger" onclick="deleteCurrentIndex(\'' + type + '\', \'' + name + '\')">🔢 Index curent (' + (data.current || '---') + ')</button>';
+        if (data.previous !== undefined && data.previous > 0) {
+            content += '<button class="btn btn-danger" onclick="deletePreviousIndex(\'' + type + '\', \'' + name + '\')">📊 Index anterior (' + data.previous + ')</button>';
+        }
+        content += '<button class="btn" onclick="showEditIndexForm(\'' + type + '\', \'' + name + '\')">✏️ Editează indexuri</button>';
+    }
+    
+    if (data.history && data.history.length > 0) {
+        content += '<button class="btn btn-danger" onclick="deleteLastEntry(\'' + type + '\', \'' + name + '\')">📝 Ultima înregistrare completă</button>';
+        content += '<button class="btn btn-danger" onclick="showHistoryForDelete(\'' + type + '\', \'' + name + '\')">📋 Din istoric</button>';
+    }
+    
+    content += '<button class="btn btn-danger" onclick="deleteAllData(\'' + type + '\', \'' + name + '\')">🗑️ Toate datele</button>';
+    content += '</div>';
+    
+    document.getElementById('deleteContent').innerHTML = content;
+    document.getElementById('deleteOverlay').style.display = 'flex';
+}
+
+function hideDeleteOptions() {
+    document.getElementById('deleteOverlay').style.display = 'none';
+}
+
+function deleteCurrentIndex(type, name) {
+    const data = indexData[type];
+    if (!data || data.current === undefined) {
+        alert('❌ Nu există index curent pentru ' + name);
+        return;
+    }
+
+    if (confirm('⚠️ Sigur doriți să ștergeți indexul curent (' + data.current + ') pentru ' + name + '?\n\nIndexul anterior va rămâne ca index curent.')) {
+        if (data.previous !== undefined && data.previous > 0) {
+            // Indexul anterior devine indexul curent
+            data.current = data.previous;
+            data.previous = 0;
+            data.consumption = 0;
+        } else {
+            // Dacă nu există index anterior, resetează totul
+            data.current = 0;
+            data.previous = 0;
+            data.consumption = 0;
+        }
+        
+        data.lastUpdate = new Date().toISOString();
+        
+        // Actualizează istoricul
+        if (data.history && data.history.length > 0) {
+            data.history[data.history.length - 1].current = data.current;
+            data.history[data.history.length - 1].consumption = data.consumption;
+        }
+        
+        localStorage.setItem('indexData', JSON.stringify(indexData));
+        updateAllDisplays();
+        hideDeleteOptions();
+        alert('✅ Indexul curent pentru ' + name + ' a fost șters!');
+    }
+}
+
+function deletePreviousIndex(type, name) {
+    const data = indexData[type];
+    if (!data || data.previous === undefined || data.previous === 0) {
+        alert('❌ Nu există index anterior pentru ' + name);
+        return;
+    }
+
+    if (confirm('⚠️ Sigur doriți să ștergeți indexul anterior (' + data.previous + ') pentru ' + name + '?\n\nConsumul va fi recalculat sau resetat.')) {
+        // Caută în istoric un index anterior dacă există
+        let newPrevious = 0;
+        if (data.history && data.history.length > 1) {
+            // Ia indexul din penultima înregistrare
+            newPrevious = data.history[data.history.length - 2].current || 0;
+        }
+        
+        data.previous = newPrevious;
+        data.consumption = data.current - newPrevious;
+        data.lastUpdate = new Date().toISOString();
+        
+        // Actualizează istoricul
+        if (data.history && data.history.length > 0) {
+            data.history[data.history.length - 1].previous = newPrevious;
+            data.history[data.history.length - 1].consumption = data.consumption;
+        }
+        
+        localStorage.setItem('indexData', JSON.stringify(indexData));
+        updateAllDisplays();
+        hideDeleteOptions();
+        alert('✅ Indexul anterior pentru ' + name + ' a fost șters!\nConsumul recalculat: ' + data.consumption);
+    }
+}
+
+function showEditIndexForm(type, name) {
+    const data = indexData[type];
+    if (!data) return;
+    
+    hideDeleteOptions();
+    
+    // Modifică formularul pentru editare
+    let content = '<h3>✏️ Editează ' + name + '</h3>';
+    content += '<div class="form-group">';
+    content += '<label>Index curent:</label>';
+    content += '<input type="number" id="editCurrentIndex" value="' + (data.current || '') + '" placeholder="Index curent">';
+    content += '</div>';
+    
+    content += '<div class="form-group">';
+    content += '<label>Index anterior:</label>';
+    content += '<input type="number" id="editPreviousIndex" value="' + (data.previous || '') + '" placeholder="Index anterior">';
+    content += '</div>';
+    
+    content += '<div class="form-group">';
+    content += '<label>Consum calculat:</label>';
+    content += '<input type="number" id="editConsumption" value="' + (data.consumption || '') + '" placeholder="Se calculează automat" readonly style="background-color: #f0f0f0;">';
+    content += '</div>';
+    
+    content += '<div class="form-buttons">';
+    content += '<button class="btn btn-full" style="background: #666;" onclick="hideEditForm()">❌ Anulează</button>';
+    content += '<button class="btn btn-success btn-full" onclick="saveEditedIndexes(\'' + type + '\', \'' + name + '\')">💾 Salvează</button>';
+    content += '</div>';
+    
+    // Înlocuiește conținutul formularului
+    document.querySelector('#formOverlay .form-popup').innerHTML = content;
+    
+    // Adaugă event listener pentru calcularea automată
+    document.getElementById('editCurrentIndex').addEventListener('input', calculateConsumption);
+    document.getElementById('editPreviousIndex').addEventListener('input', calculateConsumption);
+    
+    document.getElementById('formOverlay').style.display = 'flex';
+}
+
+function calculateConsumption() {
+    const current = parseFloat(document.getElementById('editCurrentIndex').value) || 0;
+    const previous = parseFloat(document.getElementById('editPreviousIndex').value) || 0;
+    const consumption = current - previous;
+    document.getElementById('editConsumption').value = consumption;
+}
+
+function saveEditedIndexes(type, name) {
+    const current = parseFloat(document.getElementById('editCurrentIndex').value) || 0;
+    const previous = parseFloat(document.getElementById('editPreviousIndex').value) || 0;
+    const consumption = current - previous;
+    
+    if (current < previous && current > 0) {
+        if (!confirm('⚠️ Indexul curent (' + current + ') este mai mic decât cel anterior (' + previous + ').\n\nContinuați?')) {
+            return;
+        }
+    }
+    
+    const data = indexData[type];
+    data.current = current;
+    data.previous = previous;
+    data.consumption = consumption;
+    data.lastUpdate = new Date().toISOString();
+    
+    // Actualizează ultima înregistrare din istoric
+    if (data.history && data.history.length > 0) {
+        const lastEntry = data.history[data.history.length - 1];
+        lastEntry.current = current;
+        lastEntry.previous = previous;
+        lastEntry.consumption = consumption;
+        lastEntry.date = data.lastUpdate;
+    }
+    
+    localStorage.setItem('indexData', JSON.stringify(indexData));
+    updateAllDisplays();
+    hideEditForm();
+    alert('✅ Indexurile pentru ' + name + ' au fost actualizate!\nConsum: ' + consumption);
+}
+
+function hideEditForm() {
+    // Restaurează formularul original
+    const originalForm = `
+        <h3 id="formTitle">Adaugă Index</h3>
+        <div class="form-group">
+            <label id="formLabel">Index curent:</label>
+            <input type="number" id="formValue" placeholder="Introduceți valoarea">
+        </div>
+        <div class="form-group" id="previousIndexGroup" style="display: none;">
+            <label>Index anterior (luna trecută):</label>
+            <input type="number" id="formPrevious" placeholder="Ex: 123000">
+        </div>
+        <div class="form-group" id="kmGroup" style="display: none;">
+            <label>Kilometri parcurși:</label>
+            <input type="number" id="formKm" placeholder="Ex: 125000">
+        </div>
+        <div class="form-group" id="dateGroup" style="display: none;">
+            <label>Data:</label>
+            <input type="date" id="formDate">
+        </div>
+        <div class="form-buttons">
+            <button class="btn btn-success btn-full" onclick="saveForm()">💾 Salvează</button>
+            <button class="btn btn-full" style="background: #666;" onclick="hideForm()">❌ Anulează</button>
+        </div>
+    `;
+    
+    document.querySelector('#formOverlay .form-popup').innerHTML = originalForm;
+    document.getElementById('formOverlay').style.display = 'none';
+}
+
+function deleteLastEntry(type, name) {
+    const data = indexData[type];
+    if (!data || !data.history || data.history.length === 0) {
+        alert('❌ Nu există înregistrări de șters pentru ' + name);
+        return;
+    }
+
+    if (confirm('⚠️ Sigur doriți să ștergeți ultima înregistrare pentru ' + name + '?')) {
+        data.history.pop();
+        
+        // Actualizează datele curente cu penultima înregistrare
+        if (data.history.length > 0) {
+            const lastEntry = data.history[data.history.length - 1];
+            if (lastEntry.current !== undefined) {
+                data.current = lastEntry.current;
+                data.consumption = lastEntry.consumption;
+                data.lastUpdate = lastEntry.date;
+            } else if (lastEntry.amount !== undefined) {
+                data.amount = lastEntry.amount;
+                data.lastPayment = lastEntry.date;
+            } else if (lastEntry.km !== undefined) {
+                data.km = lastEntry.km;
+                data.lastChange = lastEntry.date;
+            }
+        } else {
+            // Dacă nu mai sunt înregistrări, resetează datele
+            if (data.current !== undefined) {
+                data.current = 0;
+                data.consumption = 0;
+                data.lastUpdate = null;
+            } else if (data.amount !== undefined) {
+                data.amount = 0;
+                data.lastPayment = null;
+            } else if (data.km !== undefined) {
+                data.km = 0;
+                data.lastChange = null;
+            }
+        }
+
+        localStorage.setItem('indexData', JSON.stringify(indexData));
+        updateAllDisplays();
+        hideDeleteOptions();
+        alert('✅ Ultima înregistrare pentru ' + name + ' a fost ștearsă!');
+    }
+}
+
+function showHistoryForDelete(type, name) {
+    const data = indexData[type];
+    if (!data || !data.history || data.history.length === 0) {
+        alert('❌ Nu există istoric pentru ' + name);
+        return;
+    }
+
+    let content = '<p>Selectați înregistrarea de șters:</p>';
+    content += '<div style="max-height: 200px; overflow-y: auto; margin: 10px 0;">';
+    
+    data.history.forEach((entry, index) => {
+        const date = new Date(entry.date).toLocaleDateString('ro-RO');
+        let entryText = '';
+        
+        if (entry.current !== undefined) {
+            entryText = `Index: ${entry.current} (consum: ${entry.consumption})`;
+        } else if (entry.amount !== undefined) {
+            entryText = `Plată: ${entry.amount} RON`;
+        } else if (entry.km !== undefined) {
+            entryText = `Kilometri: ${entry.km}`;
+        }
+        
+        content += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 5px; margin: 5px 0; background: #f0f0f0; border-radius: 5px;">
+            <span style="font-size: 12px;">${date} - ${entryText}</span>
+            <button class="btn btn-danger" style="padding: 3px 8px; font-size: 12px;" onclick="deleteHistoryEntry('${type}', '${name}', ${index})">🗑️</button>
+        </div>`;
+    });
+    
+    content += '</div>';
+    
+    document.getElementById('deleteContent').innerHTML = content;
+}
+
+function deleteHistoryEntry(type, name, index) {
+    if (confirm('⚠️ Sigur doriți să ștergeți această înregistrare?')) {
+        const data = indexData[type];
+        data.history.splice(index, 1);
+        
+        // Actualizează datele curente cu ultima înregistrare rămasă
+        if (data.history.length > 0) {
+            const lastEntry = data.history[data.history.length - 1];
+            if (lastEntry.current !== undefined) {
+                data.current = lastEntry.current;
+                data.consumption = lastEntry.consumption;
+                data.lastUpdate = lastEntry.date;
+            } else if (lastEntry.amount !== undefined) {
+                data.amount = lastEntry.amount;
+                data.lastPayment = lastEntry.date;
+            } else if (lastEntry.km !== undefined) {
+                data.km = lastEntry.km;
+                data.lastChange = lastEntry.date;
+            }
+        } else {
+            // Resetează datele dacă nu mai sunt înregistrări
+            if (data.current !== undefined) {
+                data.current = 0;
+                data.consumption = 0;
+                data.lastUpdate = null;
+            }
+        }
+
+        localStorage.setItem('indexData', JSON.stringify(indexData));
+        updateAllDisplays();
+        showHistoryForDelete(type, name); // Reîmprospătează lista
+        alert('✅ Înregistrarea a fost ștearsă!');
+    }
+}
+
+function deleteAllData(type, name) {
+    if (confirm('⚠️ ATENȚIE: Aceasta va șterge TOATE datele pentru ' + name + '!\n\nSigur doriți să continuați?')) {
+        if (confirm('🚨 Ultima confirmare: Toate datele pentru ' + name + ' vor fi pierdute definitiv!')) {
+            delete indexData[type];
+            localStorage.setItem('indexData', JSON.stringify(indexData));
+            updateAllDisplays();
+            hideDeleteOptions();
+            alert('✅ Toate datele pentru ' + name + ' au fost șterse!');
+        }
+    }
+}
+
+function clearAllData() {
+    if (confirm('⚠️ ATENȚIE: Aceasta va șterge TOATE datele din aplicație!\n\nSigur doriți să continuați?')) {
+        if (confirm('🚨 Ultima confirmare: TOATE datele vor fi pierdute definitiv!')) {
+            indexData = {};
+            localStorage.setItem('indexData', JSON.stringify(indexData));
+            updateAllDisplays();
+            alert('✅ Toate datele au fost șterse!');
+        }
+    }
+}
+
+// ========== RESTUL FUNCȚIILOR ORIGINALE ==========
+
 // Funcții pentru scanare
 function scanIndexFromImage(file) {
     if (!file) return;
@@ -644,6 +996,7 @@ function updateStatsDisplay() {
     document.getElementById('statActiveReminders').textContent = activeReminders;
 
     updateConsumptionList();
+    updateHistoryDisplay();
 }
 
 function updateConsumptionList() {
@@ -678,6 +1031,42 @@ function updateConsumptionList() {
     }
 
     container.innerHTML = html;
+}
+
+function updateHistoryDisplay() {
+    const historyContainer = document.getElementById('historyList');
+    let html = '';
+    
+    Object.keys(indexData).forEach(type => {
+        const data = indexData[type];
+        if (data && data.history && data.history.length > 0) {
+            const typeName = getTypeName(type);
+            html += `<h4 style="margin: 10px 0; color: #333;">${typeName}</h4>`;
+            
+            data.history.slice(-3).reverse().forEach((entry, index) => {
+                const date = new Date(entry.date).toLocaleDateString('ro-RO');
+                let entryText = '';
+                
+                if (entry.current !== undefined) {
+                    entryText = `Index: ${entry.current}`;
+                } else if (entry.amount !== undefined) {
+                    entryText = `Plată: ${entry.amount} RON`;
+                } else if (entry.km !== undefined) {
+                    entryText = `${entry.km} km`;
+                }
+                
+                html += `<div style="display: flex; justify-content: space-between; padding: 5px; margin: 3px 0; background: #f9f9f9; border-radius: 3px; font-size: 12px;">
+                    <span>${date} - ${entryText}</span>
+                </div>`;
+            });
+        }
+    });
+    
+    if (html === '') {
+        html = '<p style="color: #666; text-align: center; padding: 20px;">Nu există înregistrări</p>';
+    }
+    
+    historyContainer.innerHTML = html;
 }
 
 function updateStatusBadges() {
@@ -955,6 +1344,10 @@ document.addEventListener('keydown', function(e) {
     
     if (e.key === 'Escape' && document.getElementById('formOverlay').style.display === 'flex') {
         hideForm();
+    }
+    
+    if (e.key === 'Escape' && document.getElementById('deleteOverlay').style.display === 'flex') {
+        hideDeleteOptions();
     }
     
     if (e.key === 'Enter' && document.getElementById('formOverlay').style.display === 'flex') {
