@@ -1,21 +1,66 @@
 {
   "name": "Indexuri & Reminder-uri",
   "short_name": "Indexuri",
-  "description": "Gestionează indexurile utilitățților și reminder-urile auto",
+  "description": "Aplicația pentru gestionarea indexurilor la utilități și reminder-uri auto. Apă, gaz, electricitate, asociație și documente mașină.",
   "start_url": "./",
   "display": "standalone",
   "theme_color": "#4CAF50",
   "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "./",
+  "categories": ["utilities", "productivity", "lifestyle"],
+  "lang": "ro",
+  "dir": "ltr",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png", 
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Citește Indexuri Apă",
+      "short_name": "Apă",
+      "description": "Adaugă rapid indexurile de apă",
+      "url": "./?action=water",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Citește Gaz & Electricitate",
+      "short_name": "Gaz",
+      "description": "Adaugă rapid indexurile de gaz și electricitate",
+      "url": "./?action=gas",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Plată Asociație",
+      "short_name": "Asociație",
+      "description": "Înregistrează plata la asociație",
+      "url": "./?action=association",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
