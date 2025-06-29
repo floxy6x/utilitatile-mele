@@ -156,7 +156,8 @@ function resetSyncSettings() {
 }
 
 function checkForAutoSync() {
-    if (!syncSettings.partnerName || !syncSettings.autoSync) return;
+    // Nu mai verific dacă partenerul e configurat - permite sync chiar și fără
+    if (!syncSettings.autoSync) return;
     
     const lastDataUpdate = getLastDataUpdateTime();
     const lastSync = syncSettings.lastSyncTime;
@@ -189,7 +190,7 @@ function getLastDataUpdateTime() {
 function showSyncPrompt() {
     if (!syncSettings.syncNotifications) return;
     
-    const partnerName = syncSettings.partnerName;
+    const partnerName = syncSettings.partnerName || 'partenerul tău';
     const message = '🔄 Ai adăugat date noi!\n\n' +
                    '📤 Vrei să sincronizezi cu ' + partnerName + '?\n\n' +
                    '✅ Da - trimite acum\n' +
@@ -204,10 +205,12 @@ function showSyncNotification(message) {
     // Creează o notificare în aplicație (nu popup)
     const notification = document.createElement('div');
     notification.className = 'sync-notification';
+    const partnerName = syncSettings.partnerName || 'partenerul tău';
+    
     notification.innerHTML = `
         <div class="sync-notification-content">
             <h4>🔄 Sincronizare Disponibilă</h4>
-            <p>Ai adăugat date noi! Vrei să sincronizezi cu ${syncSettings.partnerName}?</p>
+            <p>Ai adăugat date noi! Vrei să sincronizezi cu ${partnerName}?</p>
             <div class="sync-notification-buttons">
                 <button class="btn btn-success" onclick="quickSync(); hideSyncNotification();">📤 Trimite Acum</button>
                 <button class="btn" onclick="hideSyncNotification();">⏰ Mai Târziu</button>
@@ -343,15 +346,25 @@ function enhancedImportDetection() {
                 const importData = JSON.parse(jsonData);
                 
                 let fromPartner = 'cineva';
+                let partnerConfigPrompt = '';
+                
                 if (importData.syncInfo && importData.syncInfo.partnerName) {
                     fromPartner = importData.syncInfo.partnerName;
+                    
+                    // Verifică dacă trebuie să configureze partenerul
+                    if (!syncSettings.partnerName) {
+                        partnerConfigPrompt = `\n🤝 Partenerul "${fromPartner}" va fi configurat automat!`;
+                    } else if (syncSettings.partnerName !== fromPartner) {
+                        partnerConfigPrompt = `\n🔄 Partenerul va fi actualizat la "${fromPartner}"`;
+                    }
                 }
                 
                 const autoImport = confirm(
                     '📥 Date de sincronizare detectate!\n\n' +
                     '👤 De la: ' + fromPartner + '\n' +
                     '📊 Indexuri: ' + importData.summary.totalIndexes + '\n' +
-                    '🕐 Data: ' + new Date(importData.timestamp).toLocaleDateString('ro-RO') + '\n\n' +
+                    '🕐 Data: ' + new Date(importData.timestamp).toLocaleDateString('ro-RO') + 
+                    partnerConfigPrompt + '\n\n' +
                     '🔄 Doriți să sincronizați automat?'
                 );
                 
@@ -1060,6 +1073,17 @@ function exportToLink() {
     }
 
     try {
+        // Determină numele expeditorului
+        let senderName = syncSettings.partnerName || 'Necunoscut';
+        
+        // Dacă nu e configurat partenerul, întreabă numele
+        if (!syncSettings.partnerName) {
+            const userName = prompt('👤 Cum te numești?\n\n(Pentru ca destinatarul să știe de la cine primește datele)\n\nEx: "Mihai", "Soțul", "Ana"');
+            if (userName && userName.trim()) {
+                senderName = userName.trim();
+            }
+        }
+        
         const exportData = {
             version: '1.0',
             timestamp: new Date().toISOString(),
@@ -1067,8 +1091,9 @@ function exportToLink() {
             summary: generateDataSummary(),
             syncInfo: {
                 from: 'Manual Export',
-                partnerName: syncSettings.partnerName || 'Necunoscut',
-                syncTime: new Date().toISOString()
+                partnerName: senderName, // Numele expeditorului (pentru configurare automată)
+                syncTime: new Date().toISOString(),
+                senderConfigured: !!syncSettings.partnerName // Dacă expeditorul are partener configurat
             }
         };
 
@@ -1082,16 +1107,32 @@ function exportToLink() {
             const personalizedMessage = generatePersonalizedShareMessage(shareUrl, exportData.summary);
             showShareOptionsPersonalized(shareUrl, personalizedMessage);
         } else {
-            showShareOptions(shareUrl, exportData.summary);
+            // Mesaj pentru utilizatori neconfigurați
+            const basicMessage = generateBasicShareMessage(shareUrl, exportData.summary, senderName);
+            showShareOptions(shareUrl, exportData.summary, basicMessage);
         }
         
         markSyncCompleted();
-        console.log('📤 Date exportate cu succes');
+        console.log('📤 Date exportate cu succes de la:', senderName);
         
     } catch (error) {
         console.error('❌ Eroare la export:', error);
         alert('❌ Eroare la crearea link-ului de partajare.\n\nÎncercați din nou.');
     }
+}
+
+function generateBasicShareMessage(shareUrl, summary, senderName) {
+    return `📤 Date Indexuri de la ${senderName}\n\n` +
+           `📊 ${summary.totalIndexes} indexuri actualizate\n` +
+           `🏷️ Tipuri: ${summary.indexTypes.join(', ')}\n` +
+           `🕐 ${new Date().toLocaleDateString('ro-RO')} ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}\n\n` +
+           `🔗 Link pentru import:\n${shareUrl}\n\n` +
+           `📱 Instrucțiuni:\n` +
+           `1. Deschide link-ul\n` +
+           `2. Aplicația va detecta automat datele\n` +
+           `3. Confirmă importul\n` +
+           `4. ${senderName} va fi configurat automat ca partener de sincronizare\n\n` +
+           `✨ Gata! Sincronizarea bilaterală va fi activă!`;
 }
 
 function generateDataSummary() {
@@ -1119,8 +1160,8 @@ function generateDataSummary() {
     return summary;
 }
 
-function showShareOptions(shareUrl, summary) {
-    const message = '📤 Partajare date indexuri\n\n' +
+function showShareOptions(shareUrl, summary, customMessage = null) {
+    const message = customMessage || ('📤 Partajare date indexuri\n\n' +
                    '📊 Rezumat:\n' +
                    '• ' + summary.totalIndexes + ' indexuri înregistrate\n' +
                    '• Tipuri: ' + summary.indexTypes.join(', ') + '\n' +
@@ -1130,7 +1171,7 @@ function showShareOptions(shareUrl, summary) {
                    '1. Deschide link-ul pe telefonul ei\n' +
                    '2. Apasă "📥 Importă date" din Statistici\n' +
                    '3. Confirmă importul\n\n' +
-                   'Dorești să:';
+                   'Dorești să:');
 
     if (navigator.share) {
         navigator.share({
@@ -1185,8 +1226,11 @@ function fallbackShare(shareUrl, message) {
 
 function fallbackSharePersonalized(shareUrl, personalizedMessage) {
     copyToClipboard(shareUrl);
+    
+    const recipientName = syncSettings.partnerName || 'destinatarul';
+    
     alert('📤 Link copiat!\n\n' + 
-          '📝 Mesaj pregătit pentru ' + syncSettings.partnerName + ':\n\n' +
+          '📝 Mesaj pregătit pentru ' + recipientName + ':\n\n' +
           personalizedMessage.substring(0, 200) + '...\n\n' +
           '💡 Lipește în WhatsApp/SMS și trimite!');
 }
@@ -1252,6 +1296,60 @@ function importFromData(compressedData, isAutoSync = false) {
         }
         
         const summary = importData.summary;
+        
+        // ========== CONFIGURARE AUTOMATĂ PARTENER ==========
+        let autoConfiguredPartner = false;
+        
+        // Dacă nu am partener configurat și primesc de la cineva
+        if (!syncSettings.partnerName && importData.syncInfo && importData.syncInfo.partnerName) {
+            const senderName = importData.syncInfo.partnerName;
+            
+            if (confirm(`🤝 Ai primit date de la "${senderName}"!\n\n` +
+                       `Vrei să configurez automat "${senderName}" ca partenerul tău de sincronizare?\n\n` +
+                       `✅ Da - configurez automat\n` +
+                       `❌ Nu - import doar datele`)) {
+                
+                // Configurează automat partenerul
+                syncSettings.partnerName = senderName;
+                syncSettings.autoSync = true;
+                syncSettings.syncNotifications = true;
+                syncSettings.setupCompleted = true;
+                syncSettings.configuredAt = new Date().toISOString();
+                syncSettings.autoConfiguredFrom = 'import';
+                
+                if (saveSyncSettings()) {
+                    autoConfiguredPartner = true;
+                    console.log('🤝 Partener configurat automat:', senderName);
+                }
+            }
+        }
+        
+        // Verifică dacă partenerul actual match-uie cu sender-ul
+        else if (syncSettings.partnerName && importData.syncInfo && importData.syncInfo.partnerName) {
+            const senderName = importData.syncInfo.partnerName;
+            const currentPartner = syncSettings.partnerName;
+            
+            // Dacă nu match-uie, întreabă dacă vrea să actualizeze
+            if (senderName !== currentPartner) {
+                if (confirm(`🔄 Ai primit date de la "${senderName}"!\n\n` +
+                           `Partenerul tău curent: "${currentPartner}"\n\n` +
+                           `Vrei să actualizez partenerul la "${senderName}"?\n\n` +
+                           `✅ Da - actualizez partenerul\n` +
+                           `❌ Nu - păstrez "${currentPartner}"`)) {
+                    
+                    syncSettings.partnerName = senderName;
+                    syncSettings.configuredAt = new Date().toISOString();
+                    syncSettings.autoConfiguredFrom = 'import_update';
+                    
+                    if (saveSyncSettings()) {
+                        autoConfiguredPartner = true;
+                        console.log('🔄 Partener actualizat:', senderName);
+                    }
+                }
+            }
+        }
+        
+        // ========== MESAJ DE CONFIRMARE ÎMBUNĂTĂȚIT ==========
         let confirmMessage = '📥 Confirmare import\n\n' +
                            '📊 Date de importat:\n' +
                            '• ' + summary.totalIndexes + ' indexuri\n' +
@@ -1259,7 +1357,11 @@ function importFromData(compressedData, isAutoSync = false) {
                            '• Data: ' + (summary.lastUpdate ? new Date(summary.lastUpdate).toLocaleDateString('ro-RO') : 'N/A') + '\n\n';
         
         if (importData.syncInfo && importData.syncInfo.partnerName) {
-            confirmMessage += '👤 Sincronizare de la: ' + importData.syncInfo.partnerName + '\n\n';
+            confirmMessage += '👤 Sincronizare de la: ' + importData.syncInfo.partnerName + '\n';
+            if (autoConfiguredPartner) {
+                confirmMessage += '🤝 Partener configurat automat!\n';
+            }
+            confirmMessage += '\n';
         }
         
         confirmMessage += '⚠️ ATENȚIE: Aceasta va înlocui toate datele existente!\n\n' +
@@ -1275,10 +1377,16 @@ function importFromData(compressedData, isAutoSync = false) {
                 // Marchează timpul de sincronizare
                 if (isAutoSync && importData.syncInfo) {
                     syncSettings.lastSyncTime = importData.syncInfo.syncTime;
-                    localStorage.setItem('syncSettings', JSON.stringify(syncSettings));
+                    saveSyncSettings();
                 }
                 
                 updateAllDisplays();
+                
+                // Actualizează statusul sincronizării dacă s-a configurat partenerul
+                if (autoConfiguredPartner) {
+                    updateSyncStatus();
+                }
+                
                 checkReminders();
                 
                 if (navigator.vibrate) {
@@ -1289,6 +1397,10 @@ function importFromData(compressedData, isAutoSync = false) {
                 
                 if (importData.syncInfo && importData.syncInfo.partnerName) {
                     successMessage += '\n🤝 Sincronizat cu ' + importData.syncInfo.partnerName;
+                }
+                
+                if (autoConfiguredPartner) {
+                    successMessage += '\n🎉 Partener configurat automat pentru sincronizări viitoare!';
                 }
                 
                 alert(successMessage + '\n\nMergeți la secțiunea Utilități pentru a vedea datele.');
