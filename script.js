@@ -1873,41 +1873,167 @@ function showBulkIndexForm() {
     }
 }
 
-// Funcție pentru setări sincronizare cu debug
-function showSyncSettings() {
-    const currentPartner = syncSettings.partnerName || 'Neconfigurat';
-    const configDate = syncSettings.configuredAt ? new Date(syncSettings.configuredAt).toLocaleDateString('ro-RO') : 'Niciodată';
+// Funcție pentru grupuri de sincronizare
+function showSyncGroups() {
+    const groups = syncSettings.groups || [];
     
-    const message = `🔧 Setări Sincronizare Avansate\n\n` +
-                   `👤 Partner curent: ${currentPartner}\n` +
-                   `📅 Configurat: ${configDate}\n` +
-                   `🔄 Auto-sync: ${syncSettings.autoSync ? 'Activ' : 'Inactiv'}\n` +
-                   `🔔 Notificări: ${syncSettings.syncNotifications ? 'Active' : 'Inactive'}\n\n` +
-                   `Ce vrei să faci?\n\n` +
-                   `1. Reconfigurează partenerul\n` +
-                   `2. Debug setări (pentru programatori)\n` +
-                   `3. Resetează toate setările\n` +
-                   `4. Anulează\n\n` +
-                   `Alege opțiunea (1-4):`;
+    let message = '👥 Grupuri de Sincronizare\n\n';
+    
+    if (groups.length === 0) {
+        message += '📝 Nu ai grupuri configurate.\n\n';
+    } else {
+        message += '📋 Grupurile tale:\n';
+        groups.forEach((group, index) => {
+            message += `${index + 1}. ${group.name} (${group.members.join(', ')})\n`;
+        });
+        message += '\n';
+    }
+    
+    message += 'Ce vrei să faci?\n\n';
+    message += '1. Adaugă grup nou (ex: Familie)\n';
+    message += '2. Trimite la grup specific\n';
+    message += '3. Configurează partener principal\n';
+    message += '4. Anulează\n\n';
+    message += 'Alege opțiunea (1-4):';
     
     const choice = prompt(message);
     
     switch(choice) {
         case '1':
-            setupPartner();
+            createSyncGroup();
             break;
         case '2':
-            debugSyncSettings();
-            alert('🔍 Informații debug afișate în consolă (F12).\n\nDacă partenerul se deconfigurează, contactează dezvoltatorul cu aceste informații.');
+            if (groups.length > 0) {
+                selectGroupToSync();
+            } else {
+                alert('❌ Nu ai grupuri create. Creează unul mai întâi.');
+            }
             break;
         case '3':
-            resetSyncSettings();
+            setupPartner();
             break;
         case '4':
         default:
-            // Nu face nimic
             break;
     }
+}
+
+function createSyncGroup() {
+    const groupName = prompt('👥 Numele grupului:\n\n(Ex: "Familie", "Părinți", "Casa Mare")\n\nScrie numele:');
+    
+    if (!groupName || !groupName.trim()) return;
+    
+    const members = prompt('👤 Membrii grupului:\n\n(Ex: "Mama, Tata", "Ana, Mihai, Mama")\n\nScrie numele membrilor (separate prin virgulă):');
+    
+    if (!members || !members.trim()) return;
+    
+    const memberList = members.split(',').map(m => m.trim()).filter(m => m);
+    
+    if (memberList.length === 0) {
+        alert('❌ Trebuie să adaugi cel puțin un membru!');
+        return;
+    }
+    
+    // Inițializează grupurile dacă nu există
+    if (!syncSettings.groups) {
+        syncSettings.groups = [];
+    }
+    
+    // Adaugă grupul nou
+    syncSettings.groups.push({
+        name: groupName.trim(),
+        members: memberList,
+        createdAt: new Date().toISOString()
+    });
+    
+    saveSyncSettings();
+    
+    alert(`✅ Grupul "${groupName}" a fost creat cu succes!\n\nMembri: ${memberList.join(', ')}\n\nAcum poți trimite date către acest grup din meniul de sincronizare.`);
+}
+
+function selectGroupToSync() {
+    const groups = syncSettings.groups || [];
+    
+    if (groups.length === 0) {
+        alert('❌ Nu ai grupuri create.');
+        return;
+    }
+    
+    let message = '👥 Alege grupul pentru sincronizare:\n\n';
+    groups.forEach((group, index) => {
+        message += `${index + 1}. ${group.name} (${group.members.join(', ')})\n`;
+    });
+    message += '\nIntroduceți numărul grupului:';
+    
+    const choice = prompt(message);
+    const groupIndex = parseInt(choice) - 1;
+    
+    if (groupIndex >= 0 && groupIndex < groups.length) {
+        const selectedGroup = groups[groupIndex];
+        syncToGroup(selectedGroup);
+    } else {
+        alert('❌ Selecție invalidă!');
+    }
+}
+
+function syncToGroup(group) {
+    if (Object.keys(indexData).length === 0) {
+        alert('❌ Nu ai date de sincronizat!');
+        return;
+    }
+
+    try {
+        const exportData = {
+            version: '1.0',
+            timestamp: new Date().toISOString(),
+            data: indexData,
+            summary: generateDataSummary(),
+            syncInfo: {
+                from: 'Group Sync',
+                partnerName: 'Grupul ' + group.name,
+                groupName: group.name,
+                groupMembers: group.members,
+                syncTime: new Date().toISOString(),
+                isGroupSync: true
+            }
+        };
+
+        const jsonData = JSON.stringify(exportData);
+        const compressed = btoa(encodeURIComponent(jsonData));
+        
+        const currentUrl = window.location.href.split('?')[0];
+        const shareUrl = currentUrl + '?import=' + compressed;
+        
+        // Mesaj pentru grup
+        const groupMessage = generateGroupShareMessage(shareUrl, exportData.summary, group);
+        
+        // Copiază link-ul
+        copyToClipboard(shareUrl);
+        
+        alert(`📤 Link copiat pentru grupul "${group.name}"!\n\n` + 
+              `📝 Mesaj pregătit pentru ${group.members.join(', ')}:\n\n` +
+              groupMessage.substring(0, 200) + '...\n\n' +
+              `💡 Trimite în grupul WhatsApp "${group.name}"!`);
+        
+        markSyncCompleted();
+        
+    } catch (error) {
+        console.error('❌ Eroare la sincronizarea grupului:', error);
+        alert('❌ Eroare la sincronizarea cu grupul.\n\nÎncearcă din nou.');
+    }
+}
+
+function generateGroupShareMessage(shareUrl, summary, group) {
+    return `👥 Date Indexuri pentru ${group.name}\n\n` +
+           `📊 ${summary.totalIndexes} indexuri actualizate\n` +
+           `🏷️ Tipuri: ${summary.indexTypes.join(', ')}\n` +
+           `🕐 ${new Date().toLocaleDateString('ro-RO')} ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}\n\n` +
+           `🔗 Link pentru vizualizare:\n${shareUrl}\n\n` +
+           `📱 Pentru ${group.members.join(', ')}:\n` +
+           `1. Deschideți link-ul\n` +
+           `2. Vedeți indexurile actualizate\n` +
+           `3. Opțional: importați datele în aplicația voastră\n\n` +
+           `💡 Acum toată familia poate vedea indexurile!`;
 }
 
 // ========== EVENT LISTENERS ==========
