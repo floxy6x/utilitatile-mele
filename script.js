@@ -4,15 +4,72 @@ let syncSettings = JSON.parse(localStorage.getItem('syncSettings') || '{}');
 let currentFormType = null;
 let currentFormId = null;
 
-// Inițializare setări sincronizare
-if (!syncSettings.partnerName) {
-    syncSettings = {
-        partnerName: '',
-        autoSync: true,
-        lastSyncTime: null,
-        syncNotifications: true
-    };
+// Inițializare robustă setări sincronizare
+function initializeSyncSettings() {
+    // Verifică și păstrează setările existente
+    const existingSettings = localStorage.getItem('syncSettings');
+    
+    if (!existingSettings || !syncSettings.version) {
+        // Doar dacă nu există setări sau sunt vechi
+        const defaultSettings = {
+            version: '1.1', // Versiune pentru tracking
+            partnerName: syncSettings.partnerName || '',
+            autoSync: syncSettings.autoSync !== false, // Default true
+            lastSyncTime: syncSettings.lastSyncTime || null,
+            syncNotifications: syncSettings.syncNotifications !== false, // Default true
+            setupCompleted: syncSettings.setupCompleted || false
+        };
+        
+        // Păstrează valorile existente dacă există
+        syncSettings = { ...defaultSettings, ...syncSettings };
+        localStorage.setItem('syncSettings', JSON.stringify(syncSettings));
+        console.log('🔧 Setări sincronizare inițializate:', syncSettings);
+    } else {
+        // Actualizează versiunea dar păstrează setările
+        syncSettings.version = '1.1';
+        localStorage.setItem('syncSettings', JSON.stringify(syncSettings));
+        console.log('🔄 Setări sincronizare păstrate:', syncSettings);
+    }
 }
+
+// Funcție pentru salvare sigură setări
+function saveSyncSettings() {
+    try {
+        localStorage.setItem('syncSettings', JSON.stringify(syncSettings));
+        console.log('💾 Setări sincronizare salvate:', syncSettings);
+        return true;
+    } catch (error) {
+        console.error('❌ Eroare la salvarea setărilor:', error);
+        return false;
+    }
+}
+
+// Verifică periodic setările (anti-pierdere)
+function validateSyncSettings() {
+    const stored = localStorage.getItem('syncSettings');
+    if (!stored) {
+        console.warn('⚠️ Setări sincronizare lipsă - restaurez...');
+        initializeSyncSettings();
+        return false;
+    }
+    
+    try {
+        const parsed = JSON.parse(stored);
+        if (!parsed.version) {
+            console.warn('⚠️ Setări sincronizare fără versiune - actualizez...');
+            initializeSyncSettings();
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('❌ Setări sincronizare corupte - reinițializez...');
+        initializeSyncSettings();
+        return false;
+    }
+}
+
+// Apelează inițializarea
+initializeSyncSettings();
 
 // ========== FUNCȚII PENTRU SINCRONIZARE BILATERALĂ ==========
 
@@ -20,27 +77,81 @@ function setupPartner() {
     const partnerName = prompt('🤝 Cum se numește partenerul tău?\n\n(Ex: "Soția", "Ana", "Mihai")\n\nAceasta va personaliza mesajele de sincronizare:');
     
     if (partnerName && partnerName.trim()) {
+        // Actualizează setările
         syncSettings.partnerName = partnerName.trim();
         syncSettings.autoSync = true;
         syncSettings.syncNotifications = true;
-        localStorage.setItem('syncSettings', JSON.stringify(syncSettings));
+        syncSettings.setupCompleted = true;
+        syncSettings.configuredAt = new Date().toISOString();
         
-        alert('✅ Perfect! Acum aplicația va sugera automat să partajezi datele cu ' + partnerName + ' când adaugi ceva nou!');
-        updateSyncStatus();
+        // Salvare robustă
+        if (saveSyncSettings()) {
+            // Verifică că s-a salvat corect
+            setTimeout(() => {
+                const verification = JSON.parse(localStorage.getItem('syncSettings') || '{}');
+                if (verification.partnerName === partnerName.trim()) {
+                    console.log('✅ Partener configurat și verificat:', partnerName.trim());
+                    updateSyncStatus();
+                    alert('✅ Perfect! Acum aplicația va sugera automat să partajezi datele cu ' + partnerName + ' când adaugi ceva nou!');
+                } else {
+                    console.error('❌ Verificarea configurării a eșuat');
+                    alert('⚠️ S-a configurat dar nu s-a salvat corect. Încearcă din nou.');
+                }
+            }, 500);
+        } else {
+            alert('❌ Eroare la salvarea setărilor. Încearcă din nou.');
+        }
     }
 }
 
 function updateSyncStatus() {
+    // Verifică setările înainte de actualizare
+    if (!validateSyncSettings()) {
+        console.warn('⚠️ Setări invalide în updateSyncStatus');
+        return;
+    }
+    
     // Adaugă indicatori vizuali pentru statusul sincronizării
     const syncIndicator = document.getElementById('syncIndicator');
     if (syncIndicator) {
-        if (syncSettings.partnerName) {
+        if (syncSettings.partnerName && syncSettings.partnerName.trim()) {
             syncIndicator.innerHTML = '🤝 Sincronizat cu ' + syncSettings.partnerName;
             syncIndicator.className = 'sync-indicator connected';
         } else {
             syncIndicator.innerHTML = '⚠️ Nu e configurat partenerul';
             syncIndicator.className = 'sync-indicator disconnected';
         }
+    } else {
+        console.warn('⚠️ Element syncIndicator nu există în DOM');
+    }
+}
+
+// Funcție de debug pentru setări
+function debugSyncSettings() {
+    console.log('🔍 Debug setări sincronizare:');
+    console.log('📦 localStorage syncSettings:', localStorage.getItem('syncSettings'));
+    console.log('🔧 Obiect syncSettings:', syncSettings);
+    console.log('👤 Partner Name:', syncSettings.partnerName);
+    console.log('🔄 Auto Sync:', syncSettings.autoSync);
+    console.log('📝 Setup Completed:', syncSettings.setupCompleted);
+    
+    // Testează și afișează în UI
+    const indicator = document.getElementById('syncIndicator');
+    if (indicator) {
+        console.log('🎯 Sync Indicator în DOM:', indicator.textContent);
+    }
+    
+    return syncSettings;
+}
+
+// Funcție pentru resetare setări (în caz de probleme)
+function resetSyncSettings() {
+    if (confirm('⚠️ Sigur vrei să resetezi toate setările de sincronizare?\n\nVei pierde configurația partenerului.')) {
+        localStorage.removeItem('syncSettings');
+        syncSettings = {};
+        initializeSyncSettings();
+        updateSyncStatus();
+        alert('✅ Setări resetate! Reconfigurează partenerul.');
     }
 }
 
@@ -1650,9 +1761,41 @@ function showBulkIndexForm() {
     }
 }
 
-// Funcție pentru setări sincronizare (stub pentru viitor)
+// Funcție pentru setări sincronizare cu debug
 function showSyncSettings() {
-    alert('🚧 Setări avansate de sincronizare vor fi implementate în versiuni viitoare!\n\nÎn prezent poți:\n• Configura partenerul\n• Activa/dezactiva notificările\n• Folosi sincronizarea rapidă');
+    const currentPartner = syncSettings.partnerName || 'Neconfigurat';
+    const configDate = syncSettings.configuredAt ? new Date(syncSettings.configuredAt).toLocaleDateString('ro-RO') : 'Niciodată';
+    
+    const message = `🔧 Setări Sincronizare Avansate\n\n` +
+                   `👤 Partner curent: ${currentPartner}\n` +
+                   `📅 Configurat: ${configDate}\n` +
+                   `🔄 Auto-sync: ${syncSettings.autoSync ? 'Activ' : 'Inactiv'}\n` +
+                   `🔔 Notificări: ${syncSettings.syncNotifications ? 'Active' : 'Inactive'}\n\n` +
+                   `Ce vrei să faci?\n\n` +
+                   `1. Reconfigurează partenerul\n` +
+                   `2. Debug setări (pentru programatori)\n` +
+                   `3. Resetează toate setările\n` +
+                   `4. Anulează\n\n` +
+                   `Alege opțiunea (1-4):`;
+    
+    const choice = prompt(message);
+    
+    switch(choice) {
+        case '1':
+            setupPartner();
+            break;
+        case '2':
+            debugSyncSettings();
+            alert('🔍 Informații debug afișate în consolă (F12).\n\nDacă partenerul se deconfigurează, contactează dezvoltatorul cu aceste informații.');
+            break;
+        case '3':
+            resetSyncSettings();
+            break;
+        case '4':
+        default:
+            // Nu face nimic
+            break;
+    }
 }
 
 // ========== EVENT LISTENERS ==========
@@ -1685,6 +1828,9 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Aplicația de indexuri s-a încărcat cu sincronizare bilaterală!');
     
+    // Verifică și validează setările la pornire
+    validateSyncSettings();
+    
     document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
     
     // Verifică dacă e prima rulare pentru configurare partener
@@ -1701,13 +1847,34 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSyncStatus();
     checkReminders();
     
-    setInterval(checkReminders, 60000);
+    // Verifică setările periodic (la fiecare minut)
+    setInterval(() => {
+        validateSyncSettings();
+        updateSyncStatus();
+        checkReminders();
+    }, 60000);
     
+    // Debug info la pornire
     console.log('📊 Date încărcate:', Object.keys(indexData).length, 'categorii');
     console.log('🤝 Sincronizare cu:', syncSettings.partnerName || 'Neconfigurat');
+    console.log('🔧 Versiune setări:', syncSettings.version || 'Necunoscută');
+    
+    // Verifică consistența setărilor după 5 secunde
+    setTimeout(() => {
+        const verification = JSON.parse(localStorage.getItem('syncSettings') || '{}');
+        if (!verification.partnerName && syncSettings.partnerName) {
+            console.warn('⚠️ Detectată inconsistență în setări - restaurez...');
+            saveSyncSettings();
+            updateSyncStatus();
+        }
+    }, 5000);
 });
 
 window.addEventListener('load', function() {
     console.log('🎉 Aplicația Indexuri & Reminder-uri cu Sincronizare Bilaterală este gata!');
-    setTimeout(checkReminders, 1000);
+    setTimeout(() => {
+        checkReminders();
+        // Verificare finală setări
+        updateSyncStatus();
+    }, 1000);
 });
