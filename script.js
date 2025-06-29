@@ -28,11 +28,29 @@ function showIndexForm(type, name) {
     currentFormId = type;
     
     document.getElementById('formTitle').textContent = '📊 ' + name;
-    document.getElementById('formLabel').textContent = 'Index curent (nou):';
-    document.getElementById('formValue').placeholder = 'Ex: 123456';
+    
+    // Specifică tipul de index pentru apă
+    if (type === 'waterBath' || type === 'waterKitchen') {
+        document.getElementById('formLabel').textContent = 'Index curent (cifrele negre):';
+        document.getElementById('formValue').placeholder = 'Ex: 47223 (doar cifrele negre, nu roșiile)';
+    } else {
+        document.getElementById('formLabel').textContent = 'Index curent (nou):';
+        document.getElementById('formValue').placeholder = 'Ex: 123456';
+    }
+    
     document.getElementById('previousIndexGroup').style.display = 'block';
     document.getElementById('kmGroup').style.display = 'none';
     document.getElementById('dateGroup').style.display = 'none';
+    
+    // Pentru apă, label-ul pentru indexul anterior
+    const prevLabel = document.querySelector('#previousIndexGroup label');
+    if (type === 'waterBath' || type === 'waterKitchen') {
+        prevLabel.textContent = 'Index anterior (cifrele negre):';
+        document.getElementById('formPrevious').placeholder = 'Ex: 47200 (doar cifrele negre)';
+    } else {
+        prevLabel.textContent = 'Index anterior (luna trecută):';
+        document.getElementById('formPrevious').placeholder = 'Ex: 123000';
+    }
     
     const lastValue = indexData[type] ? indexData[type].current : 0;
     document.getElementById('formValue').value = lastValue > 0 ? lastValue + 1 : '';
@@ -241,9 +259,9 @@ function simulateOCR(file) {
     const fileName = file.name.toLowerCase();
     
     const baseNumbers = {
-        water: { min: 100000, max: 999999 },
-        gas: { min: 10000, max: 99999 },
-        electric: { min: 100000, max: 999999 }
+        water: { min: 10000, max: 99999 },    // Doar 5 cifre pentru apă (00472)
+        gas: { min: 10000, max: 99999 },      // 5 cifre pentru gaz
+        electric: { min: 100000, max: 999999 } // 6 cifre pentru electricitate
     };
     
     let range = baseNumbers.water;
@@ -263,11 +281,29 @@ function showIndexFormWithValue(type, name, value) {
     currentFormId = type;
     
     document.getElementById('formTitle').textContent = '📊 ' + name;
-    document.getElementById('formLabel').textContent = 'Index detectat (nou):';
-    document.getElementById('formValue').placeholder = 'Verificați valoarea';
+    
+    // Specifică tipul de index pentru apă
+    if (type === 'waterBath' || type === 'waterKitchen') {
+        document.getElementById('formLabel').textContent = 'Index detectat (cifrele negre):';
+        document.getElementById('formValue').placeholder = 'Ex: 47223 (verificați că sunt doar cifrele negre)';
+    } else {
+        document.getElementById('formLabel').textContent = 'Index detectat (nou):';
+        document.getElementById('formValue').placeholder = 'Verificați valoarea';
+    }
+    
     document.getElementById('previousIndexGroup').style.display = 'block';
     document.getElementById('kmGroup').style.display = 'none';
     document.getElementById('dateGroup').style.display = 'none';
+    
+    // Pentru apă, label-ul pentru indexul anterior
+    const prevLabel = document.querySelector('#previousIndexGroup label');
+    if (type === 'waterBath' || type === 'waterKitchen') {
+        prevLabel.textContent = 'Index anterior (cifrele negre):';
+        document.getElementById('formPrevious').placeholder = 'Ex: 47200 (doar cifrele negre)';
+    } else {
+        prevLabel.textContent = 'Index anterior (luna trecută):';
+        document.getElementById('formPrevious').placeholder = 'Ex: 123000';
+    }
     
     document.getElementById('formValue').value = value;
     
