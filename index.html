@@ -61,9 +61,10 @@
                         <div class="index-last" id="waterBathLast">Ultimul: -</div>
                     </div>
                     <div class="index-current" id="waterBathCurrent">---</div>
-                    <div>
+                    <div class="btn-group">
                         <button class="btn" onclick="showIndexForm('waterBath', 'Apometru Baie')">Citește</button>
                         <label class="btn btn-camera" for="waterBathCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('waterBath', 'Apometru Baie')">🗑️</button>
                         <input type="file" id="waterBathCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterBath', 'Apometru Baie')">
                     </div>
                 </div>
@@ -74,9 +75,10 @@
                         <div class="index-last" id="waterKitchenLast">Ultimul: -</div>
                     </div>
                     <div class="index-current" id="waterKitchenCurrent">---</div>
-                    <div>
+                    <div class="btn-group">
                         <button class="btn" onclick="showIndexForm('waterKitchen', 'Apometru Bucătărie')">Citește</button>
                         <label class="btn btn-camera" for="waterKitchenCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('waterKitchen', 'Apometru Bucătărie')">🗑️</button>
                         <input type="file" id="waterKitchenCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'waterKitchen', 'Apometru Bucătărie')">
                     </div>
                 </div>
@@ -92,9 +94,10 @@
                         <div class="index-last" id="gasLast">Ultimul: -</div>
                     </div>
                     <div class="index-current" id="gasCurrent">---</div>
-                    <div>
+                    <div class="btn-group">
                         <button class="btn" onclick="showIndexForm('gas', 'Contor Gaz')">Citește</button>
                         <label class="btn btn-camera" for="gasCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('gas', 'Contor Gaz')">🗑️</button>
                         <input type="file" id="gasCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'gas', 'Contor Gaz')">
                     </div>
                 </div>
@@ -105,9 +108,10 @@
                         <div class="index-last" id="electricLast">Ultimul: -</div>
                     </div>
                     <div class="index-current" id="electricCurrent">---</div>
-                    <div>
+                    <div class="btn-group">
                         <button class="btn" onclick="showIndexForm('electric', 'Contor Electricitate')">Citește</button>
                         <label class="btn btn-camera" for="electricCamera">📷</label>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('electric', 'Contor Electricitate')">🗑️</button>
                         <input type="file" id="electricCamera" class="hidden" accept="image/*" capture="environment" onchange="scanSpecificIndex(this.files[0], 'electric', 'Contor Electricitate')">
                     </div>
                 </div>
@@ -123,7 +127,10 @@
                         <div class="index-last" id="associationLast">Ultima plată: -</div>
                     </div>
                     <div class="index-current" id="associationCurrent">--- RON</div>
-                    <button class="btn btn-success" onclick="showPaymentForm('association', 'Plată Asociație')">Plătește</button>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="showPaymentForm('association', 'Plată Asociație')">Plătește</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('association', 'Plată Asociație')">🗑️</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,7 +146,10 @@
                         <div class="index-last" id="oilLast">Ultima dată: -</div>
                     </div>
                     <div class="index-current" id="oilCurrent">--- km</div>
-                    <button class="btn btn-warning" onclick="showCarForm('oil', 'Schimb Ulei')">Actualizează</button>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" onclick="showCarForm('oil', 'Schimb Ulei')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('oil', 'Schimb Ulei')">🗑️</button>
+                    </div>
                 </div>
             </div>
 
@@ -152,7 +162,10 @@
                         <div class="index-last" id="vignetteStatus">Status: -</div>
                     </div>
                     <div class="index-current" id="vignetteExpiry">--/--/----</div>
-                    <button class="btn" onclick="showCarForm('vignette', 'Rovinietă')">Actualizează</button>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('vignette', 'Rovinietă')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('vignette', 'Rovinietă')">🗑️</button>
+                    </div>
                 </div>
                 
                 <div class="index-grid">
@@ -161,7 +174,10 @@
                         <div class="index-last" id="insuranceStatus">Status: -</div>
                     </div>
                     <div class="index-current" id="insuranceExpiry">--/--/----</div>
-                    <button class="btn" onclick="showCarForm('insurance', 'Asigurare')">Actualizează</button>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('insurance', 'Asigurare')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('insurance', 'Asigurare')">🗑️</button>
+                    </div>
                 </div>
                 
                 <div class="index-grid">
@@ -170,7 +186,10 @@
                         <div class="index-last" id="itpStatus">Status: -</div>
                     </div>
                     <div class="index-current" id="itpExpiry">--/--/----</div>
-                    <button class="btn" onclick="showCarForm('itp', 'ITP')">Actualizează</button>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showCarForm('itp', 'ITP')">Actualizează</button>
+                        <button class="btn btn-danger" onclick="showDeleteOptions('itp', 'ITP')">🗑️</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,6 +202,9 @@
                 </button>
                 <button class="btn quick-btn" style="background: #FF5722;" onclick="showImportFromLink()">
                     📥 Importă date
+                </button>
+                <button class="btn quick-btn btn-danger" onclick="clearAllData()">
+                    🗑️ Șterge Tot
                 </button>
             </div>
 
@@ -215,6 +237,15 @@
                     </p>
                 </div>
             </div>
+
+            <div class="card">
+                <h3>📋 Istoric Înregistrări</h3>
+                <div id="historyList">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Nu există înregistrări
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -241,6 +272,17 @@
             <div class="form-buttons">
                 <button class="btn btn-success btn-full" onclick="saveForm()">💾 Salvează</button>
                 <button class="btn btn-full" style="background: #666;" onclick="hideForm()">❌ Anulează</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay pentru opțiuni de ștergere -->
+    <div class="form-overlay" id="deleteOverlay">
+        <div class="form-popup">
+            <h3 id="deleteTitle">Opțiuni Ștergere</h3>
+            <div id="deleteContent"></div>
+            <div class="form-buttons">
+                <button class="btn btn-full" style="background: #666;" onclick="hideDeleteOptions()">❌ Anulează</button>
             </div>
         </div>
     </div>
