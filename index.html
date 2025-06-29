@@ -36,7 +36,7 @@
         <!-- Header -->
         <div class="header">
             <h1>📊 Indexuri & Reminder-uri</h1>
-            <p>Gestionați indexurile utilitățților și reminder-urile auto</p>
+            <p>Gestionați indexurile utilitățiilor și reminder-urile auto</p>
             <!-- Indicator sincronizare -->
             <div id="syncIndicator" class="sync-indicator disconnected">
                 ⚠️ Nu e configurat partenerul
@@ -335,6 +335,13 @@
                 <button class="btn btn-full" style="background: #666;" onclick="hideDeleteOptions()">❌ Anulează</button>
             </div>
         </div>
+    </div>
+
+    <!-- BUTON RESET DATA - COMPATIBIL CU SINCRONIZAREA BILATERALĂ -->
+    <div class="reset-container">
+        <button class="reset-btn" onclick="resetAllData()" title="Reset Date - Sincronizare cu Costica activă">
+            🗑️ <span class="reset-text">Reset Date</span>
+        </button>
     </div>
 
     <script src="script.js"></script>
