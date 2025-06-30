@@ -391,11 +391,11 @@ function showSection(section) {
     document.getElementById(section).classList.add('active');
     
     const tabs = document.querySelectorAll('.tab');
-    if (section === 'utilities') {
+    if (section === 'indexuri') {
         tabs[0].classList.add('active');
-    } else if (section === 'car') {
+    } else if (section === 'auto') {
         tabs[1].classList.add('active');
-    } else if (section === 'stats') {
+    } else if (section === 'setari') {
         tabs[2].classList.add('active');
     }
     
