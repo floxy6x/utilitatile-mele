@@ -2061,6 +2061,184 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// ========== FUNCȚIA DE RESET PENTRU TESTARE ==========
+
+function resetAllData() {
+    // Prima confirmare - Adaptată pentru aplicația cu sincronizare bilaterală
+    const confirmed = confirm(
+        '⚠️ ATENȚIE - FUNCȚIE DE TESTARE!\n\n' +
+        'Această acțiune va șterge datele de utilizator:\n\n' +
+        '💧 Indexuri Apă (baie, bucătărie)\n' +
+        '🔥 Gaz & Electricitate\n' +
+        '🏢 Plăți Asociație de Proprietari\n' +
+        '🚗 Întreținere Mașină & Documente\n' +
+        '📊 Statistici și istoric\n\n' +
+        '✅ SE PĂSTREAZĂ:\n' +
+        '🤝 Sincronizarea cu ' + (syncSettings.partnerName || 'partenerul') + '\n' +
+        '⚙️ Setările aplicației\n' +
+        '🔄 Configurația sincronizării bilaterale\n\n' +
+        'Ideal pentru ca prietenii să poată testa aplicația cu interfața goală.\n' +
+        'Sunteți sigur că vreți să continuați?'
+    );
+    
+    if (!confirmed) {
+        console.log('📋 Reset anulat de utilizator la prima confirmare');
+        return;
+    }
+    
+    // A doua confirmare pentru siguranță
+    const doubleCheck = confirm(
+        '🚨 ULTIMA CONFIRMARE!\n\n' +
+        'Resetul va șterge doar datele de utilizator.\n' +
+        'Sincronizarea cu ' + (syncSettings.partnerName || 'partenerul') + ' rămâne activă.\n' +
+        'Aplicația va reveni la starea inițială goală.\n\n' +
+        'Continuați cu resetarea pentru testare?'
+    );
+    
+    if (!doubleCheck) {
+        console.log('📋 Reset anulat de utilizator la a doua confirmare');
+        return;
+    }
+    
+    try {
+        console.log('🧹 Începe resetarea pentru testare...');
+        console.log('📊 Date înainte de reset:', localStorage.length, 'elemente în localStorage');
+        
+        // PĂSTREAZĂ setările critice de sincronizare
+        const setariCritice = {
+            // Setări de sincronizare bilaterală - FOARTE IMPORTANTE
+            syncSettings: localStorage.getItem('syncSettings'),
+            
+            // Backup suplimentar pentru siguranță
+            partnerName: syncSettings.partnerName,
+            autoSync: syncSettings.autoSync,
+            syncNotifications: syncSettings.syncNotifications,
+            setupCompleted: syncSettings.setupCompleted,
+            configuredAt: syncSettings.configuredAt,
+            lastSyncTime: syncSettings.lastSyncTime,
+            version: syncSettings.version
+        };
+        
+        console.log('🔒 Setări critice păstrate pentru restaurare:');
+        console.log('👤 Partner:', setariCritice.partnerName);
+        console.log('🔄 Auto-sync:', setariCritice.autoSync);
+        console.log('📝 Setup completat:', setariCritice.setupCompleted);
+        
+        // Notifică partenerul despre reset (simulare pentru testare)
+        if (syncSettings.partnerName) {
+            console.log('📢 Simul notificare partener despre reset de testare pentru:', syncSettings.partnerName);
+        }
+        
+        // Identifică cheile care trebuie șterse (DOAR datele utilizatorului)
+        const cheiDeSterg = [];
+        const cheiDeProtejat = [
+            'sync', 'Sync', 'Settings', 'settings', 'Config', 'config'
+        ];
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            
+            // Verifică dacă cheia trebuie protejată
+            const esteProtejata = cheiDeProtejat.some(protectedKey => 
+                key.toLowerCase().includes(protectedKey.toLowerCase())
+            );
+            
+            if (!esteProtejata) {
+                cheiDeSterg.push(key);
+            }
+        }
+        
+        console.log('🗑️ Chei identificate pentru ștergere:', cheiDeSterg);
+        console.log('🔒 Chei protejate (NU se șterg):', 
+            Array.from({length: localStorage.length}, (_, i) => localStorage.key(i))
+                .filter(key => !cheiDeSterg.includes(key))
+        );
+        
+        // Șterge doar datele utilizatorului
+        cheiDeSterg.forEach(key => {
+            localStorage.removeItem(key);
+            console.log(`✅ Șters: ${key}`);
+        });
+        
+        // Restaurează setările critice (în caz că au fost șterse accidental)
+        if (setariCritice.syncSettings) {
+            localStorage.setItem('syncSettings', setariCritice.syncSettings);
+            console.log('🔄 Restaurat: syncSettings');
+        }
+        
+        // Resetează variabila globală indexData
+        indexData = {};
+        
+        // Verifică că sincronizarea a rămas intactă
+        const verificareSyncSettings = localStorage.getItem('syncSettings');
+        if (verificareSyncSettings) {
+            const parsed = JSON.parse(verificareSyncSettings);
+            console.log('✅ Verificare sincronizare după reset:');
+            console.log('👤 Partner verificat:', parsed.partnerName);
+            console.log('🔄 Auto-sync verificat:', parsed.autoSync);
+        }
+        
+        console.log('✅ Reset pentru testare finalizat cu succes!');
+        console.log('📊 Date după reset:', localStorage.length, 'elemente în localStorage');
+        console.log('🤝 Sincronizarea a fost păstrată intactă');
+        
+        // Afișează mesaj de succes
+        alert(
+            '✅ Reset pentru testare finalizat!\n\n' +
+            '🗑️ Datele de utilizator au fost șterse\n' +
+            '🤝 Sincronizarea cu ' + (syncSettings.partnerName || 'partenerul') + ' funcționează\n' +
+            '⚙️ Toate setările de sistem au fost păstrate\n' +
+            '🎯 Aplicația este acum goală și gata pentru testare\n\n' +
+            '🔄 Aplicația se va reîncărca...'
+        );
+        
+        // Reîncarcă aplicația cu un delay pentru a permite utilizatorului să vadă mesajul
+        setTimeout(() => {
+            console.log('🔄 Reîncărcare aplicație cu sincronizare păstrată...');
+            window.location.reload();
+        }, 2000); // 2 secunde pentru a citi mesajul
+        
+    } catch (error) {
+        console.error('❌ Eroare la reset pentru testare:', error);
+        
+        alert(
+            '❌ Eroare la resetarea datelor!\n\n' +
+            'A apărut o problemă tehnică.\n' +
+            'Sincronizarea a rămas intactă.\n' +
+            'Încercați să reîncărcați pagina manual (Ctrl+F5).'
+        );
+        
+        if (confirm('Vreți să reîncărcați pagina acum pentru a rezolva problema?')) {
+            window.location.reload();
+        }
+    }
+}
+
+// Funcții helper pentru debugging (opționale pentru dezvoltare)
+function debugResetFunction() {
+    console.log('🔍 DEBUG RESET FUNCTION:');
+    console.log('📊 Total localStorage keys:', localStorage.length);
+    console.log('🤝 Partner configurat:', syncSettings.partnerName);
+    console.log('🔄 Auto-sync activ:', syncSettings.autoSync);
+    console.log('📝 Setup completat:', syncSettings.setupCompleted);
+    
+    const allKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        allKeys.push(localStorage.key(i));
+    }
+    console.log('🔑 Toate cheile din localStorage:', allKeys);
+    
+    return {
+        totalKeys: localStorage.length,
+        partnerName: syncSettings.partnerName,
+        autoSync: syncSettings.autoSync,
+        allKeys: allKeys
+    };
+}
+
+// Expune funcția de debug pentru development (opțional)
+window.debugResetFunction = debugResetFunction;
+
 // ========== INIȚIALIZARE APLICAȚIE ==========
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -2115,4 +2293,7 @@ window.addEventListener('load', function() {
         // Verificare finală setări
         updateSyncStatus();
     }, 1000);
+    
+    // Log final pentru confirmare că resetul e disponibil
+    console.log('🔧 Funcția de reset pentru testare a fost încărcată și este gata de folosit!');
 });
