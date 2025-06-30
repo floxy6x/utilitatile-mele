@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indexuri & Reminder-uri</title>
+    <title>📊 Indexuri & Reminder-uri</title>
     <link rel="stylesheet" href="styles.css">
     
     <!-- 🚀 PWA Configuration -->
@@ -31,12 +31,12 @@
         }
     </script>
 </head>
+
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header Simplificat -->
         <div class="header">
             <h1>📊 Indexuri & Reminder-uri</h1>
-            <p>Gestionați indexurile utilitățiilor și reminder-urile auto</p>
             <!-- Indicator sincronizare -->
             <div id="syncIndicator" class="sync-indicator disconnected">
                 ⚠️ Nu e configurat partenerul
@@ -54,28 +54,22 @@
             <p>Extrag numărul de pe contor</p>
         </div>
 
-        <!-- Tabs -->
+        <!-- Tabs Reorganizate -->
         <div class="tabs">
-            <button class="tab active" onclick="showSection('utilities')">🏠 Utilități</button>
-            <button class="tab" onclick="showSection('car')">🚗 Mașina</button>
-            <button class="tab" onclick="showSection('stats')">📈 Statistici</button>
+            <button class="tab active" onclick="showSection('indexuri')">🏠 Indexuri</button>
+            <button class="tab" onclick="showSection('auto')">🚗 Auto</button>
+            <button class="tab" onclick="showSection('setari')">⚙️ Setări</button>
         </div>
 
-        <!-- Secțiunea Utilități -->
-        <div class="section active" id="utilities">
-            <!-- Quick Actions -->
+        <!-- TAB 1: INDEXURI (Utilități) -->
+        <div class="section active" id="indexuri">
+            <!-- Quick Actions pentru Indexuri -->
             <div class="quick-actions">
                 <button class="btn quick-btn btn-success" onclick="markAllIndexesSent()">
                     ✅ Trimise toate
                 </button>
                 <button class="btn quick-btn btn-warning" onclick="showBulkIndexForm()">
                     📝 Index rapid
-                </button>
-                <button class="btn quick-btn quick-sync-btn sync-action" onclick="quickSync()">
-                    🔄 Sincronizează
-                </button>
-                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
-                    📤 Partajează
                 </button>
                 <label class="btn quick-btn btn-camera" for="cameraInput">
                     📷 Scanează
@@ -165,10 +159,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Statistici Indexuri -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📊 Indexuri trimise</h4>
+                    <div class="value" id="statIndexesSent">0/4</div>
+                </div>
+                <div class="stat-card">
+                    <h4>⚠️ Reminder-uri</h4>
+                    <div class="value" id="statActiveReminders">0</div>
+                </div>
+            </div>
+
+            <!-- Consumuri -->
+            <div class="card">
+                <h3>📈 Consumuri Lunare</h3>
+                <div id="consumptionList">
+                    <div class="consumption-item">
+                        <span class="consumption-period">Această lună</span>
+                        <span class="consumption-value">Calculez...</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Secțiunea Mașina -->
-        <div class="section" id="car">
+        <!-- TAB 2: AUTO (Mașina) -->
+        <div class="section" id="auto">
+            <!-- Întreținere Mașină -->
             <div class="card">
                 <h3>🚗 Întreținere Mașină</h3>
                 
@@ -185,6 +203,7 @@
                 </div>
             </div>
 
+            <!-- Documente Auto -->
             <div class="card">
                 <h3>📋 Documente Auto</h3>
                 
@@ -224,82 +243,124 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Reminder-uri Auto Active -->
+            <div class="card">
+                <h3>🔔 Reminder-uri Auto</h3>
+                <div id="autoRemindersList">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Nu există reminder-uri auto active
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- Secțiunea Statistici -->
-        <div class="section" id="stats">
-            <div class="quick-actions">
-                <button class="btn quick-btn" style="background: #9C27B0;" onclick="exportToLink()">
-                    📤 Partajează datele
-                </button>
-                <button class="btn quick-btn" style="background: #FF5722;" onclick="showImportFromLink()">
-                    📥 Importă date
-                </button>
-                <button class="btn quick-btn btn-danger" onclick="clearAllData()">
-                    🗑️ Șterge Tot
-                </button>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>📊 Indexuri trimise luna aceasta</h4>
-                    <div class="value" id="statIndexesSent">0/4</div>
-                </div>
-                <div class="stat-card">
-                    <h4>⚠️ Reminder-uri active</h4>
-                    <div class="value" id="statActiveReminders">0</div>
-                </div>
-            </div>
-
+        <!-- TAB 3: SETĂRI (Export, Import, Sincronizare) -->
+        <div class="section" id="setari">
+            <!-- Sincronizare -->
             <div class="card">
-                <h3>📈 Consumuri Lunare</h3>
-                <div id="consumptionList">
-                    <div class="consumption-item">
-                        <span class="consumption-period">Această lună</span>
-                        <span class="consumption-value">Calculez...</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>🔔 Reminder-uri Active</h3>
-                <div id="remindersList">
-                    <p style="color: #666; text-align: center; padding: 20px;">
-                        Nu există reminder-uri active
-                    </p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>🤝 Setări Sincronizare</h3>
+                <h3>🤝 Sincronizare Bilaterală</h3>
                 <div class="sync-settings">
-                    <h4>🔄 Configurare Partener</h4>
-                    <p style="font-size: 13px; color: #666; margin-bottom: 10px;">
-                        Configurează sincronizarea automată cu partenerul tău
-                    </p>
+                    <h4>🔄 Status Partener</h4>
+                    <div id="partnerStatus" class="partner-status">
+                        <span id="partnerName">Neconfigurat</span>
+                        <span id="lastSync">-</span>
+                    </div>
+                    
                     <div class="btn-group">
                         <button class="btn setup-partner-btn" onclick="setupPartner()">
                             👤 Configurează Partener
                         </button>
-                        <button class="btn" onclick="showSyncSettings()" style="background: #6c757d;">
-                            ⚙️ Setări Avansate
+                        <button class="btn quick-sync-btn sync-action" onclick="quickSync()">
+                            🔄 Sincronizează Acum
                         </button>
                     </div>
                 </div>
             </div>
 
+            <!-- Export & Import -->
             <div class="card">
-                <h3>📋 Istoric Înregistrări</h3>
+                <h3>📤 Export & Import Date</h3>
+                
+                <div class="export-options">
+                    <h4>📤 Exportare</h4>
+                    <div class="btn-group">
+                        <button class="btn" style="background: #9C27B0;" onclick="exportToLink()">
+                            📤 Partajează Link
+                        </button>
+                        <button class="btn" style="background: #4CAF50;" onclick="generateReport()">
+                            📊 Generează Raport
+                        </button>
+                        <button class="btn" style="background: #FF9800;" onclick="exportToExcel()">
+                            📋 Export Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="import-options">
+                    <h4>📥 Importare</h4>
+                    <div class="btn-group">
+                        <button class="btn" style="background: #FF5722;" onclick="showImportFromLink()">
+                            📥 Importă din Link
+                        </button>
+                        <button class="btn" style="background: #607D8B;" onclick="importFromFile()">
+                            📁 Importă din Fișier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rapoarte -->
+            <div class="card">
+                <h3>📊 Rapoarte & Analize</h3>
+                
+                <div class="report-options">
+                    <h4>📈 Tipuri Rapoarte</h4>
+                    <div class="btn-group">
+                        <button class="btn" onclick="generateMonthlyReport()">
+                            📅 Raport Lunar
+                        </button>
+                        <button class="btn" onclick="generateConsumptionReport()">
+                            💧 Raport Consum
+                        </button>
+                        <button class="btn" onclick="generateFullReport()">
+                            📋 Raport Complet
+                        </button>
+                    </div>
+                </div>
+
+                <div class="report-preview" id="reportPreview">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        Selectați tipul de raport de mai sus
+                    </p>
+                </div>
+            </div>
+
+            <!-- Istoric & Backup -->
+            <div class="card">
+                <h3>📋 Istoric & Management</h3>
+                
                 <div id="historyList">
                     <p style="color: #666; text-align: center; padding: 20px;">
                         Nu există înregistrări
                     </p>
                 </div>
+
+                <div class="management-options">
+                    <div class="btn-group">
+                        <button class="btn" onclick="showFullHistory()">
+                            📋 Istoric Complet
+                        </button>
+                        <button class="btn btn-danger" onclick="clearAllData()">
+                            🗑️ Șterge Tot
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Form Popup -->
+    <!-- Form Popup (același ca înainte) -->
     <div class="form-overlay" id="formOverlay">
         <div class="form-popup">
             <h3 id="formTitle">Adaugă Index</h3>
@@ -337,9 +398,22 @@
         </div>
     </div>
 
+    <!-- Overlay pentru rapoarte -->
+    <div class="form-overlay" id="reportOverlay">
+        <div class="form-popup report-popup">
+            <h3 id="reportTitle">📊 Raport Indexuri</h3>
+            <div id="reportContent"></div>
+            <div class="form-buttons">
+                <button class="btn btn-success" onclick="downloadReport()">💾 Descarcă</button>
+                <button class="btn" onclick="shareReport()">📤 Partajează</button>
+                <button class="btn" style="background: #666;" onclick="hideReport()">❌ Închide</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BUTON RESET DATA - COMPATIBIL CU SINCRONIZAREA BILATERALĂ -->
     <div class="reset-container">
-        <button class="reset-btn" onclick="resetAllData()" title="Reset Date - Sincronizare cu Costica activă">
+        <button class="reset-btn" onclick="resetAllData()" title="Reset Date - Sincronizare activă">
             🗑️ <span class="reset-text">Reset Date</span>
         </button>
     </div>
